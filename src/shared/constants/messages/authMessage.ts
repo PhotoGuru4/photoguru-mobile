@@ -4,4 +4,5 @@ export const AUTH_MESSAGES = {
   REGISTER_SUCCESS: 'Registration successful!',
   REGISTER_ERROR: 'Registration failed!',
   LOGOUT_SUCCESS: 'Logout successful!',
+  WELCOME: 'Welcome to PhotoGuru',
 } as const;
