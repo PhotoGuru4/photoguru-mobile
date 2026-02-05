@@ -8,7 +8,6 @@ import { queryClient } from '@lib/queryClient';
 
 import RootNavigator from '@navigation/RootNavigator';
 import Toast from 'react-native-toast-message';
-import toastConfig from '@/shared/utils/toastConfig';
 
 const App = () => {
   return (
@@ -19,7 +18,6 @@ const App = () => {
             <RootNavigator />
           </NavigationContainer>
           <Toast
-            config={toastConfig}
             position="top"
             visibilityTime={2500}
             topOffset={50}
