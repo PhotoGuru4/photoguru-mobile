@@ -14,6 +14,7 @@ export type InputSize = 'sm' | 'md' | 'lg';
 
 interface FormInputProps extends Omit<TextInputProps, 'style'> {
   label?: string;
+  required?: boolean;
   error?: string;
   icon?: React.ReactNode;
   onIconClick?: () => void;
@@ -31,6 +32,7 @@ export const Input = forwardRef<TextInput, FormInputProps>(
   (
     {
       label,
+      required,
       error,
       icon,
       onIconClick,
@@ -77,8 +79,11 @@ export const Input = forwardRef<TextInput, FormInputProps>(
     return (
       <View className={clsx('space-y-1', containerClassName)}>
         {label && (
-          <Text variant="caption" className="text-gray-600 mb-2 font-medium">
+          <Text variant="caption" className="text-gray-600 mb-2">
             {label}
+            {required && (
+              <Text className="text-pink-500"> *</Text>
+            )}
           </Text>
         )}
 
@@ -89,12 +94,13 @@ export const Input = forwardRef<TextInput, FormInputProps>(
             shadowOpacity,
             shadowRadius,
             shadowOffset: { width: 0, height: 2 },
-            elevation: Platform.OS === 'android'
-              ? focusAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 3],
-              })
-              : 0,
+            elevation:
+              Platform.OS === 'android'
+                ? focusAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 3],
+                })
+                : 0,
           }}
           className={clsx(
             'border',
@@ -109,10 +115,7 @@ export const Input = forwardRef<TextInput, FormInputProps>(
             placeholderTextColor="#9CA3AF"
             onFocus={handleFocus}
             onBlur={handleBlur}
-            className={clsx(
-              'w-full',
-              className,
-            )}
+            className={clsx('w-full', className)}
             {...props}
           />
 

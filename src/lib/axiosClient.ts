@@ -5,7 +5,7 @@ import { notifyLogout, notifyTokenUpdate } from '@lib/authSession';
 import { API_ENDPOINTS } from '@/shared/constants';
 
 const API_URL =
-  Constants.expoConfig?.extra?.EXPO_PUBLIC_API_URL ||
+  Constants.expoConfig?.extra?.apiUrl ??
   'https://express-api-xxuh.onrender.com/api/v1';
 
 const axiosClient = axios.create({
@@ -13,6 +13,7 @@ const axiosClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 axiosClient.interceptors.request.use(async (config) => {

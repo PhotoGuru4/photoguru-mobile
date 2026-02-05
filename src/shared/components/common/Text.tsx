@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Text as RNText, TextStyle } from 'react-native';
 
 export type TextVariant = 'subtitle' | 'body' | 'caption' | 'small';
-export type TextColor = 'default' | 'muted' | 'pink' | 'pinkSoft' | 'white';
+export type TextColor = 'default' | 'muted' | 'pink' | 'pinkSoft' | 'white' | 'gray';
 
 interface TextProps {
   children: React.ReactNode;
@@ -29,6 +29,7 @@ const colorStyles: Record<TextColor, string> = {
   pink: 'text-pink-500',
   pinkSoft: 'text-pink-400',
   white: 'text-white',
+  gray: 'text-gray-400',
 };
 
 const alignStyles = {
