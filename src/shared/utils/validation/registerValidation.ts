@@ -24,6 +24,8 @@ export const validateRegisterForm = (
     errors.email = VALIDATION_MESSAGES.REQUIRED('Email');
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
     errors.email = VALIDATION_MESSAGES.INVALID_EMAIL;
+  } else if (values.email !== values.email.toLowerCase()) {
+    errors.email = VALIDATION_MESSAGES.EMAIL_LOWERCASE;
   }
 
   if (!values.password) {
