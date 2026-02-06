@@ -7,7 +7,7 @@ import { API_ENDPOINTS } from '@/shared/constants';
 
 const API_URL =
   Constants.expoConfig?.extra?.apiUrl ??
-  'https://express-api-xxuh.onrender.com/api/v1';
+  'https://photoguru-api.onrender.com/api/v1';
 
 const axiosClient = axios.create({
   baseURL: API_URL,
