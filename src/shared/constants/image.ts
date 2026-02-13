@@ -1,3 +1,4 @@
 export const DEFAULT_IMAGES = {
-// Define your default images here
+  DEFAULT_AVATAR: 'https://i.pinimg.com/736x/d5/73/9c/d5739cd35d1dfd26420779c469849ded.jpg',
+  DEFAULT_CONCEPT: 'https://i.pinimg.com/736x/55/9c/e2/559ce281e23d85430e760120c4374ad8.jpg',
 };

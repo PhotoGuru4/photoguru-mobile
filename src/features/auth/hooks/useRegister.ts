@@ -10,7 +10,7 @@ import {
 import { showError, showSuccess } from '@shared/utils/toast';
 import { useRegisterMutation } from '@features/auth/hooks/mutations/useRegisterMutation';
 import { AuthStackParamList } from '@shared/types/authNavigator';
-import { AUTH_MESSAGES, SCREENS } from '@/shared/constants';
+import { AUTH_MESSAGES, SCREENS } from '@shared/constants';
 import { getApiErrorMessage } from '@shared/utils/error-handler';
 
 export const useRegisterForm = () => {

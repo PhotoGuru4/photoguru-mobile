@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import clsx from 'clsx';
 import { Search } from 'lucide-react-native';
 
@@ -8,6 +8,7 @@ export type SearchBarSize = 'sm' | 'md' | 'lg';
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
+  onSubmit?: () => void;
   placeholder?: string;
   size?: SearchBarSize;
   className?: string;
@@ -34,6 +35,7 @@ const iconSizes: Record<SearchBarSize, number> = {
 export const SearchBar = ({
   value,
   onChange,
+  onSubmit,
   placeholder = 'Search...',
   size = 'md',
   className,
@@ -47,7 +49,12 @@ export const SearchBar = ({
         className,
       )}
     >
-      <Search size={iconSizes[size]} color="#9CA3AF" />
+      <TouchableOpacity
+        disabled={!onSubmit}
+        onPress={onSubmit}
+      >
+        <Search size={iconSizes[size]} color="#9CA3AF" />
+      </TouchableOpacity>
 
       <TextInput
         value={value}
@@ -59,6 +66,7 @@ export const SearchBar = ({
           textSizes[size],
         )}
         returnKeyType="search"
+        onSubmitEditing={onSubmit}
         clearButtonMode="while-editing"
       />
     </View>

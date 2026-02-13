@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import * as SecureStore from 'expo-secure-store';
 
 import { getApiErrorMessage } from '@shared/utils/error-handler';
 import { showError, showSuccess } from '@shared/utils/toast';
@@ -42,8 +43,8 @@ export const useLoginForm = () => {
     }
 
     loginMutation.mutate(values, {
-      onSuccess: (res: LoginResponse) => {
-        const { access_token, user } = res;
+      onSuccess: async (res: LoginResponse) => {
+        const { access_token, refresh_token, user } = res;
 
         if (user.role !== ROLES.CUSTOMER) {
           logout();
@@ -52,6 +53,15 @@ export const useLoginForm = () => {
             'Photographer please login using website',
           );
           return;
+        }
+
+        await SecureStore.setItemAsync('accessToken', access_token);
+
+        if (refresh_token) {
+          await SecureStore.setItemAsync(
+            'refreshToken',
+            refresh_token,
+          );
         }
 
         setAuth(user, access_token);
