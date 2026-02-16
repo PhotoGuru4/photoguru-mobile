@@ -1,6 +1,5 @@
-export const PAGINATION = {
-  PAGE_OFFSET: {
-    PER_PAGE: 9,
-    PAGE: 1,
-  },
-};
+export const PAGE_LIMIT = {
+  DEFAULT: 10,
+  SMALL: 5,
+  LARGE: 20,
+} as const;

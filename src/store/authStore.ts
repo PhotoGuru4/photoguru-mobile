@@ -22,8 +22,8 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
 
-  setAuth: (user: User, token: string) => void;
-  updateToken: (token: string) => void;
+  setAuth: (user: User, token: string) => Promise<void>;
+  updateToken: (token: string) => Promise<void>;
   clearAuth: () => void;
   logout: () => Promise<void>;
 }
@@ -35,11 +35,13 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       isAuthenticated: false,
 
-      setAuth: (user, token) => {
+      setAuth: async (user, token) => {
+        await SecureStore.setItemAsync('accessToken', token);
         set({ user, token, isAuthenticated: true });
       },
 
-      updateToken: (token) => {
+      updateToken: async (token) => {
+        await SecureStore.setItemAsync('accessToken', token);
         set({ token, isAuthenticated: true });
       },
 
@@ -53,12 +55,13 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         try {
-          POST(API_ENDPOINTS.AUTH.LOGOUT);
-        } catch (error) {
+          await POST(API_ENDPOINTS.AUTH.LOGOUT);
+        } catch {
           console.log('[Logout] API failed, force logout');
         } finally {
           await SecureStore.deleteItemAsync('accessToken');
           await SecureStore.deleteItemAsync('refreshToken');
+
           set({
             user: null,
             token: null,

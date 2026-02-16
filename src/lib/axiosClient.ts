@@ -3,7 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 
 import { notifyLogout, notifyTokenUpdate } from '@lib/authSession';
-import { API_ENDPOINTS } from '@/shared/constants';
+import { API_ENDPOINTS } from '@shared/constants';
 
 const API_URL =
   Constants.expoConfig?.extra?.apiUrl ??
