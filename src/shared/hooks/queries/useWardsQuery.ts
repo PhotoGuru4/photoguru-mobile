@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getWardsByProvinceRequest } from '@features/concept/services/locationService';
+import { getWardsByProvinceRequest } from '@shared/services/locationService';
 
 export const useWardsQuery = (provinceCode?: number) =>
   useQuery({

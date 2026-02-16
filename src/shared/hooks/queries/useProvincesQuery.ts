@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getProvincesRequest } from '@features/concept/services/locationService';
+import { getProvincesRequest } from '@shared/services/locationService';
 
 export const useProvincesQuery = () =>
   useQuery({

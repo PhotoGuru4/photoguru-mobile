@@ -5,6 +5,8 @@ export interface RegisterFormValues {
   email: string;
   password: string;
   confirmPassword: string;
+  province: string;
+  ward: string;
 }
 
 export type RegisterFormErrors = Partial<
@@ -40,6 +42,14 @@ export const validateRegisterForm = (
   } else if (values.confirmPassword !== values.password) {
     errors.confirmPassword =
       VALIDATION_MESSAGES.PASSWORDS_NOT_MATCH;
+  }
+
+  if (!values.province.trim()) {
+    errors.province = VALIDATION_MESSAGES.REQUIRED('Province');
+  }
+
+  if (!values.ward.trim()) {
+    errors.ward = VALIDATION_MESSAGES.REQUIRED('Ward');
   }
 
   return errors;

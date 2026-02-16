@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Province, Ward } from '@features/concept/types/location';
+import type { Province, Ward } from '@shared/types/location';
 import { API_ENDPOINTS } from '@shared/constants';
 
 export const getProvincesRequest = async (): Promise<Province[]> => {

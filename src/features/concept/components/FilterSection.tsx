@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { MapPin, Tag, X } from 'lucide-react-native';
 import { Text, SelectModal } from '@shared/components/common';
-import { useProvincesQuery } from '@features/concept/hooks/queries/useProvincesQuery';
-import { useWardsQuery } from '@features/concept/hooks/queries/useWardsQuery';
-import type { Province, Ward } from '@features/concept/types/location';
+import { useProvincesQuery } from '@shared/hooks/queries/useProvincesQuery';
+import { useWardsQuery } from '@shared/hooks/queries/useWardsQuery';
+import type { Province, Ward } from '@shared/types/location';
 import { ConceptFilters } from '@features/concept/types/filter';
 import { PRICE_SORT } from '@shared/constants';
 
