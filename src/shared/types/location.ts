@@ -8,3 +8,4 @@ export type Ward = {
   name: string;
   province_code: number;
 };
+

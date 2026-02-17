@@ -4,7 +4,6 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import {
   validateRegisterForm,
-  RegisterFormValues,
   RegisterFormErrors,
 } from '@shared/utils/validation/registerValidation';
 import { showError, showSuccess } from '@shared/utils/toast';
@@ -12,6 +11,15 @@ import { useRegisterMutation } from '@features/auth/hooks/mutations/useRegisterM
 import { AuthStackParamList } from '@shared/types/authNavigator';
 import { AUTH_MESSAGES, SCREENS } from '@shared/constants';
 import { getApiErrorMessage } from '@shared/utils/error-handler';
+
+export interface RegisterFormValues {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  province: string;
+  ward: string;
+}
 
 export const useRegisterForm = () => {
   const navigation =
@@ -22,6 +30,8 @@ export const useRegisterForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    province: '',
+    ward: '',
   });
 
   const [errors, setErrors] = useState<RegisterFormErrors>({});
@@ -32,7 +42,17 @@ export const useRegisterForm = () => {
 
   const handleChange =
     (field: keyof RegisterFormValues) => (value: string) => {
-      setValues((prev) => ({ ...prev, [field]: value }));
+      setValues((prev) => {
+        if (field === 'province') {
+          return {
+            ...prev,
+            province: value,
+            ward: '',
+          };
+        }
+
+        return { ...prev, [field]: value };
+      });
 
       if (errors[field]) {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -71,13 +91,13 @@ export const useRegisterForm = () => {
       },
     });
   };
+
   return {
     values,
     errors,
     showPassword,
     showConfirm,
     isLoading: registerMutation.isPending,
-
     setShowPassword,
     setShowConfirm,
     handleChange,

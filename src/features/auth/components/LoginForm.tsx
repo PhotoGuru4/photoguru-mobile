@@ -21,6 +21,7 @@ const LoginForm = () => {
         required
         label="Email Address"
         placeholder="you@example.com"
+        inputSize='sm'
         keyboardType="email-address"
         autoCapitalize="none"
         value={values.email}
@@ -39,6 +40,7 @@ const LoginForm = () => {
         required
         label="Password"
         placeholder="Enter your password"
+        inputSize='sm'
         secureTextEntry={!showPassword}
         value={values.password}
         error={errors.password}

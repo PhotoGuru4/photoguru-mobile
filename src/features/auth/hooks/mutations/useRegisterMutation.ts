@@ -8,11 +8,15 @@ export const useRegisterMutation = () => {
       username: string;
       email: string;
       password: string;
+      province: string;
+      ward: string;
     }) =>
       registerRequest({
         fullName: data.username,
         email: data.email,
         password: data.password,
+        province: data.province,
+        ward: data.ward,
         role: ROLES.CUSTOMER,
       }),
   });

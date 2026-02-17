@@ -23,7 +23,7 @@ const Dot = ({ delay }: { delay: number }) => {
 
     animation.start();
     return () => animation.stop();
-  }, []);
+  }, [delay, opacity]);
 
   return (
     <Animated.View
