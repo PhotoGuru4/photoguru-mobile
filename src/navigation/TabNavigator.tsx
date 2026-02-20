@@ -8,13 +8,14 @@ import {
 } from '@react-navigation/native';
 
 import { BackButton } from '@shared/components/common/BackButton';
-import Home from '@screens/Home';
+import HomeStackNavigator from '@navigation/HomeStackNavigator';
 import AIGuide from '@screens/AIGuide';
 import Messages from '@screens/Messages';
 import Profile from '@screens/Profile';
 
 import { useAuthStore } from '@store/authStore';
 import { SCREENS } from '@shared/constants';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import {
   Home as HomeIcon,
@@ -72,14 +73,29 @@ const MainTabNavigator = () => {
         tabBarInactiveTintColor: '#9CA3AF',
       }}
     >
+
       <Tab.Screen
         name="Home"
-        component={Home}
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <HomeIcon color={color} size={size} />
-          ),
+        component={HomeStackNavigator}
+        options={({ route }) => {
+          const routeName =
+            getFocusedRouteNameFromRoute(route) ?? 'Home';
+
+          const isDetail = routeName === 'ConceptDetail';
+
+          return {
+            tabBarLabel: 'Home',
+
+            headerTitle: isDetail ? 'Concept Detail' : 'Home',
+
+            headerLeft: isDetail
+              ? () => <BackButton size={30} fallback="Home" />
+              : undefined,
+
+            tabBarIcon: ({ color, size }) => (
+              <HomeIcon color={color} size={size} />
+            ),
+          };
         }}
       />
 

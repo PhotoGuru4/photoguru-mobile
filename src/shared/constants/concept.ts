@@ -1,0 +1,5 @@
+export const CONCEPT_TIER= {
+  BASIC: 'BASIC',
+  STANDARD: 'STANDARD',
+  PREMIUM: 'PREMIUM',
+};

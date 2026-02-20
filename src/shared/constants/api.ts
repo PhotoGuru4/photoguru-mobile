@@ -8,6 +8,8 @@ export const API_ENDPOINTS = {
   CONCEPT: {
     RECOMMENDED: '/concepts/recommended',
     SEARCH: '/concepts',
+    DETAIL: (id: number) => `/concepts/${id}`,
+    RELATED: (id: number) => `/concepts/${id}/related`,
   },
   USER: {
     PROFILE: '/users/profile',

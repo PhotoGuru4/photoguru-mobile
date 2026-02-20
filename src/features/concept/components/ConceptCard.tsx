@@ -3,6 +3,9 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { Text } from '@shared/components/common';
 import type { Concept } from '@features/concept/types/concept';
 import { DEFAULT_IMAGES } from '@shared/constants';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { HomeStackParamList } from '@navigation/HomeStackNavigator';
 
 interface Props {
   item: Concept;
@@ -16,6 +19,11 @@ const ConceptCard = ({ item }: Props) => {
   );
   const [aspectRatio, setAspectRatio] =
     useState(FALLBACK_RATIO);
+
+  const navigation =
+  useNavigation<
+    NativeStackNavigationProp<HomeStackParamList>
+  >();
 
   useEffect(() => {
     if (!imgSrc) return;
@@ -34,7 +42,14 @@ const ConceptCard = ({ item }: Props) => {
   }, [imgSrc]);
 
   return (
-    <TouchableOpacity className="mb-4 rounded-2xl overflow-hidden bg-gray-100">
+    <TouchableOpacity
+      onPress={() =>
+        navigation.push('ConceptDetail', {
+          conceptId: item.id,
+        })
+      }
+      className="mb-4 rounded-2xl overflow-hidden bg-gray-100"
+    >
       <View style={{ aspectRatio }}>
         <Image
           source={{ uri: imgSrc }}

@@ -4,17 +4,17 @@ import {
   useRoute,
   NavigationProp,
   ParamListBase,
-  RouteProp,
 } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import { ChevronLeft } from 'lucide-react-native';
 
 interface BackButtonProps {
   size?: number;
-  fallback?: keyof ParamListBase;
   color?: string;
+  fallback?: keyof ParamListBase;
 }
 
-type BackRouteParams = {
+type RouteParams = {
   from?: keyof ParamListBase;
 };
 
@@ -24,24 +24,44 @@ export const BackButton = ({
   fallback,
 }: BackButtonProps) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const route = useRoute<RouteProp<Record<string, BackRouteParams>, string>>();
+  const route = useRoute();
 
   const handleBack = () => {
-    const from = route.params?.from;
-
-    if (from) {
-      navigation.navigate(from);
-      return;
-    }
+    const params = route.params as RouteParams | undefined;
+    const from = params?.from;
 
     if (navigation.canGoBack()) {
       navigation.goBack();
       return;
     }
 
-    if (fallback) {
-      navigation.navigate(fallback);
+    const parent = navigation.getParent();
+    if (parent?.canGoBack()) {
+      parent.goBack();
+      return;
     }
+
+    if (from) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: from }],
+        }),
+      );
+      return;
+    }
+
+    if (fallback) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: fallback }],
+        }),
+      );
+      return;
+    }
+
+    console.warn('No back action available');
   };
 
   return (

@@ -31,7 +31,9 @@ const AppStack =
 const AppNavigator = () => {
   return (
     <AppStack.Navigator screenOptions={{ headerShown: false }}>
-      <AppStack.Screen name={SCREENS.APP.MAIN} component={TabNavigator} />
+      <AppStack.Screen
+        name={SCREENS.APP.MAIN}
+        component={TabNavigator} />
     </AppStack.Navigator>
   );
 };

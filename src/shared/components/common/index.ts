@@ -10,4 +10,5 @@ export * from '@shared/components/common/Badge';
 export * from '@shared/components/common/Modal';
 export * from '@shared/components/common/SelectModal';
 export * from '@shared/components/common/LoadMoreDots';
+export * from '@shared/components/common/RowItem';
 
