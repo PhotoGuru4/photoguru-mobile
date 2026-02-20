@@ -5,7 +5,7 @@ import {
   Text as RNText,
   LayoutChangeEvent,
 } from 'react-native';
-import { Text } from '@shared/components/common';
+import { Text } from '@shared/components/common/Text';
 
 interface Props {
   label: string;

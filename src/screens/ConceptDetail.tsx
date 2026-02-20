@@ -37,13 +37,14 @@ const ConceptDetail = () => {
     <ScrollView
       className="flex-1 bg-white"
       showsVerticalScrollIndicator={false}
-      onMomentumScrollEnd={({ nativeEvent }) => {
+      scrollEventThrottle={16}
+      onScroll={({ nativeEvent }) => {
         const { layoutMeasurement, contentOffset, contentSize } =
-          nativeEvent;
+            nativeEvent;
 
         const isNearBottom =
-          layoutMeasurement.height + contentOffset.y >=
-          contentSize.height - 200;
+            layoutMeasurement.height + contentOffset.y >=
+            contentSize.height - 100;
 
         if (isNearBottom && hasNextPage && !isFetching) {
           fetchNextPage();
