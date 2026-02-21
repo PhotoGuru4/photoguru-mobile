@@ -13,6 +13,7 @@ import PhotographerCard from '@features/concept/components/PhotographerCard';
 import ConceptInfoCard from '@features/concept/components/ConceptInfoCard';
 import ConceptMasonry from '@features/concept/components/ConceptMasonry';
 import { LoadMoreDots } from '@shared/components/common/LoadMoreDots';
+import { formatPriceRange } from '@shared/utils/formatPriceRange';
 
 const ConceptDetail = () => {
   const { concept, isLoading } = useConceptDetail();
@@ -57,7 +58,7 @@ const ConceptDetail = () => {
 
       <View className="px-4 py-4">
         <Text className="text-lg font-semibold text-pink-500 mb-3">
-          Price: {concept.price.toLocaleString()} VND
+          Price: {formatPriceRange(concept.minPrice, concept.maxPrice)}
         </Text>
 
         <PhotographerCard photographer={concept.photographer} />

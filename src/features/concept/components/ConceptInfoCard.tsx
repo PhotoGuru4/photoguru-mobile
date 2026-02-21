@@ -3,12 +3,14 @@ import { View } from 'react-native';
 import { Text } from '@shared/components/common';
 import type { ConceptDetail } from '@features/concept/types/concept';
 import { RowItem } from '@shared/components/common';
+import { formatDurationRange } from '@shared/utils/formatDurationRange';
 
 interface Props {
   concept: ConceptDetail;
 }
 
 const ConceptInfoCard = ({ concept }: Props) => {
+
   return (
     <View className="bg-gray-100 p-4 rounded-xl">
       <Text className="font-semibold mb-3 text-base">
@@ -24,7 +26,7 @@ const ConceptInfoCard = ({ concept }: Props) => {
 
       <RowItem
         label="Duration"
-        value={`${concept.estimatedDuration || 0} minutes`}
+        value={formatDurationRange(concept.packages)}
       />
 
       {concept.locations?.[0] && (

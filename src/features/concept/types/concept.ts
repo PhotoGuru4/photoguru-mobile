@@ -1,9 +1,8 @@
-import { CONCEPT_TIER } from '@shared/constants/concept';
-
 export interface Concept {
   id: number;
   name: string;
-  price: number;
+  minPrice: number;
+  maxPrice: number;
   thumbnailUrl: string;
   tier: string;
   photographerId: number;
@@ -41,16 +40,24 @@ export interface ConceptLocation {
   addressDetail: string | null;
 }
 
+export interface ConceptPackage {
+  id: number;
+  description: string;
+  estimatedDuration: number;
+  price: number;
+  tier: string;
+}
+
 export interface ConceptDetail {
   id: number;
   name: string;
   description: string;
-  price: number;
-  estimatedDuration: number;
-  tier: keyof typeof CONCEPT_TIER;
+  minPrice: number;
+  maxPrice: number;
   thumbnailUrl: string;
   categoryName: string;
   photographer: Photographer;
   photos: ConceptPhoto[];
   locations: ConceptLocation[];
+  packages: ConceptPackage[];
 }
