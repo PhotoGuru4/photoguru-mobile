@@ -7,6 +7,7 @@ export const SCREENS = {
 
   APP: {
     MAIN: 'Main',
+    CONCEPT_DETAIL: 'ConceptDetail',
   },
 
   TAB: {

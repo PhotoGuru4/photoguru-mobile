@@ -7,3 +7,4 @@ export * from '@shared/constants/form/authForms';
 export * from '@shared/constants/screen';
 export * from '@shared/constants/sort';
 export * from '@shared/constants/image';
+export * from '@shared/constants/concept';

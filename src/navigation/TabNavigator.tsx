@@ -5,10 +5,11 @@ import {
   useNavigation,
   NavigationProp,
   ParamListBase,
+  getFocusedRouteNameFromRoute,
 } from '@react-navigation/native';
 
 import { BackButton } from '@shared/components/common/BackButton';
-import Home from '@screens/Home';
+import HomeStackNavigator from '@navigation/HomeStackNavigator';
 import AIGuide from '@screens/AIGuide';
 import Messages from '@screens/Messages';
 import Profile from '@screens/Profile';
@@ -25,7 +26,7 @@ import {
 } from 'lucide-react-native';
 
 export type MainTabParamList = {
-  Home: undefined;
+  HomeTab: undefined;
   'AI guide': undefined;
   Messages: undefined;
   Profile: undefined;
@@ -73,13 +74,24 @@ const MainTabNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <HomeIcon color={color} size={size} />
-          ),
+        name="HomeTab"
+        component={HomeStackNavigator}
+        options={({ route }) => {
+          const routeName =
+            getFocusedRouteNameFromRoute(route) ?? 'Home';
+
+          const isDetail = routeName === 'ConceptDetail';
+
+          return {
+            tabBarLabel: 'Home',
+            headerTitle: isDetail ? 'Concept Detail' : 'Home',
+            headerLeft: isDetail
+              ? () => <BackButton size={30} fallback="HomeTab" />
+              : undefined,
+            tabBarIcon: ({ color, size }) => (
+              <HomeIcon color={color} size={size} />
+            ),
+          };
         }}
       />
 
