@@ -6,17 +6,43 @@ export const formatPriceRange = (
     return 'Updating...';
   }
 
-  if (min != null && max != null) {
-    if (min === max) {
-      return `${min.toLocaleString()} VND`;
+  const format = (amount: number): string => {
+    if (amount === 0) return '0 VND';
+
+    const absAmount = Math.abs(amount);
+
+    if (absAmount >= 1_000_000_000) {
+      return `${(amount / 1_000_000_000)
+        .toFixed(1)
+        .replace(/\.0+$/, '')}B VND`;
     }
 
-    return `${min.toLocaleString()} - ${max.toLocaleString()} VND`;
+    if (absAmount >= 1_000_000) {
+      return `${(amount / 1_000_000)
+        .toFixed(1)
+        .replace(/\.0+$/, '')}M VND`;
+    }
+
+    if (absAmount >= 1_000) {
+      return `${(amount / 1_000)
+        .toFixed(1)
+        .replace(/\.0+$/, '')}K VND`;
+    }
+
+    return `${amount} VND`;
+  };
+
+  if (min != null && max != null) {
+    if (min === max) {
+      return format(min);
+    }
+
+    return `${format(min)} - ${format(max)}`;
   }
 
   if (min != null) {
-    return `${min.toLocaleString()} VND`;
+    return format(min);
   }
 
-  return `${max?.toLocaleString()} VND`;
+  return format(max as number);
 };
