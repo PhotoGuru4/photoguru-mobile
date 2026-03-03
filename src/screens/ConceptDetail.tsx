@@ -15,8 +15,11 @@ import ConceptMasonry from '@features/concept/components/ConceptMasonry';
 import { LoadMoreDots } from '@shared/components/common/LoadMoreDots';
 import { formatPriceRange } from '@shared/utils/formatPriceRange';
 
+import { useAuthStore } from '@store/authStore';
+
 const ConceptDetail = () => {
   const { concept, isLoading } = useConceptDetail();
+  const { user } = useAuthStore();
 
   const {
     relatedConcepts,
@@ -41,11 +44,11 @@ const ConceptDetail = () => {
       scrollEventThrottle={16}
       onScroll={({ nativeEvent }) => {
         const { layoutMeasurement, contentOffset, contentSize } =
-            nativeEvent;
+          nativeEvent;
 
         const isNearBottom =
-            layoutMeasurement.height + contentOffset.y >=
-            contentSize.height - 100;
+          layoutMeasurement.height + contentOffset.y >=
+          contentSize.height - 100;
 
         if (isNearBottom && hasNextPage && !isFetching) {
           fetchNextPage();
@@ -61,7 +64,11 @@ const ConceptDetail = () => {
           Price: {formatPriceRange(concept.minPrice, concept.maxPrice)}
         </Text>
 
-        <PhotographerCard photographer={concept.photographer} />
+        <PhotographerCard
+          photographer={concept.photographer}
+          conceptId={concept.id}
+          currentUserId={user?.id ?? 0}
+        />
 
         <ConceptInfoCard concept={concept} />
 

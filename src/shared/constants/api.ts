@@ -14,5 +14,11 @@ export const API_ENDPOINTS = {
   USER: {
     PROFILE: '/users/profile',
   },
+  CHATROOM: {
+    CHATROOMS: '/chat-rooms',
+    CHATROOMID: (id: number) => `/chat-rooms/${id}`,
+    CREATECHATROOM: '/chat-rooms',
+    CHATCONCEPTCARD: (conceptId: number) => `/concepts/${conceptId}/chat-card`,
+  },
 
 };

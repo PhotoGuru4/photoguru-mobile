@@ -8,10 +8,13 @@ export const SCREENS = {
   APP: {
     MAIN: 'Main',
     CONCEPT_DETAIL: 'ConceptDetail',
+    CHATDETAIL: 'ChatDetail',
   },
 
   TAB: {
     HOME: 'Home',
     BOOKING: 'Booking',
+    MESSAGES: 'Messages',
+    PROFILE: 'Profile',
   },
 } as const;

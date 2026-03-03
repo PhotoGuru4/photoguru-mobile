@@ -11,11 +11,14 @@ import {
 import { BackButton } from '@shared/components/common/BackButton';
 import HomeStackNavigator from '@navigation/HomeStackNavigator';
 import AIGuide from '@screens/AIGuide';
-import Messages from '@screens/Messages';
+import ChatStackNavigator, { ChatStackParamList } from '@navigation/ChatStackNavigator';
 import Profile from '@screens/Profile';
 
 import { useAuthStore } from '@store/authStore';
 import { SCREENS } from '@shared/constants';
+
+import type { NavigatorScreenParams } from '@react-navigation/native';
+import type { HomeStackParamList } from '@navigation/HomeStackNavigator';
 
 import {
   Home as HomeIcon,
@@ -26,9 +29,9 @@ import {
 } from 'lucide-react-native';
 
 export type MainTabParamList = {
-  HomeTab: undefined;
+  HomeTab: NavigatorScreenParams<HomeStackParamList>;
   'AI guide': undefined;
-  Messages: undefined;
+  MessagesTab: NavigatorScreenParams<ChatStackParamList>;
   Profile: undefined;
 };
 
@@ -108,11 +111,11 @@ const MainTabNavigator = () => {
       />
 
       <Tab.Screen
-        name="Messages"
-        component={Messages}
+        name="MessagesTab"
+        component={ChatStackNavigator}
         options={{
-          title: 'Messages',
-          headerLeft: () => <BackButton size={30} />,
+          headerShown: false,
+          tabBarLabel: 'Messages',
           tabBarIcon: ({ color, size }) => (
             <MessageCircle color={color} size={size} />
           ),
