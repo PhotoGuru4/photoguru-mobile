@@ -7,6 +7,7 @@ export interface Concept {
   tier: string;
   photographerId: number;
   photographerName: string;
+  photographerAvatar: string;
   categoryName: string;
 }
 
