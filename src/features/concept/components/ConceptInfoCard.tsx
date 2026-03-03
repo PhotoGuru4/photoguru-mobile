@@ -1,8 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Text } from '@shared/components/common';
+import { Text, RowItem } from '@shared/components/common';
 import type { ConceptDetail } from '@features/concept/types/concept';
-import { RowItem } from '@shared/components/common';
 import { formatDurationRange } from '@shared/utils/formatDurationRange';
 
 interface Props {
@@ -13,7 +12,7 @@ const ConceptInfoCard = ({ concept }: Props) => {
 
   return (
     <View className="bg-gray-100 p-4 rounded-xl">
-      <Text className="font-semibold mb-3 text-base">
+      <Text variant='subtitle' className="mb-3">
         Important package information:
       </Text>
 
