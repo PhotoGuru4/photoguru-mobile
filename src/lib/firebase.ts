@@ -1,16 +1,20 @@
+import Constants from 'expo-constants';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
+const extra = Constants.expoConfig?.extra;
+
 const firebaseConfig = {
-  apiKey: 'AIzaSyDQgp-6podXR7yElzgzisvt07yFLHlgj3s',
-  authDomain: 'photoguru-chat.firebaseapp.com',
-  projectId: 'photoguru-chat',
-  storageBucket: 'photoguru-chat.firebasestorage.app',
-  messagingSenderId: '6973831390',
-  appId: '1:6973831390:web:581da64f7176af9f2e2a4f',
-  measurementId: 'G-RN9FCWBQWP',
+  apiKey: extra?.firebaseApiKey,
+  authDomain: extra?.firebaseAuthDomain,
+  projectId: extra?.firebaseProjectId,
+  storageBucket: extra?.firebaseStorageBucket,
+  messagingSenderId: extra?.firebaseMessagingSenderId,
+  appId: extra?.firebaseAppId,
+  measurementId: extra?.firebaseMeasurementId,
 };
+
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
