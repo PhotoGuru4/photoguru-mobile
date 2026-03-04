@@ -5,6 +5,7 @@ interface BaseMessage {
   id: string;
   senderId: number;
   createdAt: Timestamp;
+  isRead: boolean;
 }
 
 export interface TextMessage extends BaseMessage {

@@ -12,6 +12,7 @@ export interface ConversationUI {
   lastMessage: string;
   time: string;
   rawTime: number;
+  hasUnread: boolean;
 }
 
 export const useChatMessages = () => {
@@ -43,6 +44,7 @@ export const useChatMessages = () => {
             'Start your conversation...',
           time: formatChatTime(rawTime),
           rawTime,
+          hasUnread: room.unreadCount > 0,
         };
       })
       .sort((a, b) => b.rawTime - a.rawTime);
