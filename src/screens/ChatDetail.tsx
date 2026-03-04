@@ -38,7 +38,7 @@ const ChatDetail = () => {
     conceptMap,
     loadMore,
     loadingMore,
-  } = useChatDetail(conversationId);
+  } = useChatDetail(conversationId, currentUserId);
 
   const {
     message,

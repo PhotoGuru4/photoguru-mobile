@@ -24,6 +24,7 @@ export const sendConceptMessage = async (
       senderId,
       conceptId,
       createdAt: serverTimestamp(),
+      isRead: false,
     });
 
     console.log('MESSAGE CREATED');

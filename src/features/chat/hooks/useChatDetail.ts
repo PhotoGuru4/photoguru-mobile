@@ -20,8 +20,12 @@ import type { ConceptChatCard } from '@features/chat/types/conceptCard';
 import { MESSAGE_TYPES } from '@shared/constants/messageType';
 import { PAGE_LIMIT } from '@shared/constants';
 import { useConceptChatCardQueries } from '@features/chat/hooks/queries/useConceptChatCardQuery';
+import { markMessagesAsRead } from '@features/chat/services/markMessagesAsRead';
 
-export const useChatDetail = (roomId: string) => {
+export const useChatDetail = (
+  roomId: string,
+  currentUserId: number,
+) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [lastDoc, setLastDoc] =
     useState<QueryDocumentSnapshot<DocumentData> | null>(null);
@@ -42,7 +46,7 @@ export const useChatDetail = (roomId: string) => {
       limit(PAGE_LIMIT.DEFAULT),
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
       if (snapshot.empty) {
         setMessages([]);
         setLastDoc(null);
@@ -66,10 +70,16 @@ export const useChatDetail = (roomId: string) => {
       setMessages(data);
       setLastDoc(docs[docs.length - 1]);
       setHasMore(docs.length === PAGE_LIMIT.DEFAULT);
+
+      await markMessagesAsRead(
+        roomId,
+        currentUserId,
+        data,
+      );
     });
 
     return () => unsubscribe();
-  }, [roomId]);
+  }, [roomId, currentUserId]);
 
   const loadMore = useCallback(async () => {
     if (!roomId || !hasMore || !lastDoc || loadingMore) return;
@@ -102,12 +112,18 @@ export const useChatDetail = (roomId: string) => {
       setMessages((prev) => [...prev, ...olderMessages]);
       setLastDoc(docs[docs.length - 1]);
       setHasMore(docs.length === PAGE_LIMIT.DEFAULT);
+
+      await markMessagesAsRead(
+        roomId,
+        currentUserId,
+        olderMessages,
+      );
     } else {
       setHasMore(false);
     }
 
     setLoadingMore(false);
-  }, [roomId, lastDoc, hasMore, loadingMore]);
+  }, [roomId, lastDoc, hasMore, loadingMore, currentUserId]);
 
   const conceptIds = useMemo(() => {
     return Array.from(

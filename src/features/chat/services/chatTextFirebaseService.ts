@@ -24,6 +24,7 @@ export const sendTextMessage = async (
       senderId,
       content,
       createdAt: serverTimestamp(),
+      isRead: false,
     });
 
     console.log('TEXT MESSAGE SENT');

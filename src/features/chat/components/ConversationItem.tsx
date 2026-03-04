@@ -10,6 +10,7 @@ interface Props {
     avatar?: string;
     lastMessage: string;
     time: string;
+    hasUnread?: boolean;
   };
   onPress: () => void;
 }
@@ -24,14 +25,17 @@ const ConversationItem = ({ item, onPress }: Props) => {
       DEFAULT_IMAGES.DEFAULT_AVATAR,
     );
 
-  const isNewConversation =
-    item.lastMessage === 'View concept';
+  const hasUnread = item.hasUnread === true;
+
+  console.log('hasUnread:', item.hasUnread);
 
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      className="flex-row items-center px-4 py-4 border-b border-gray-100 bg-white"
+      className={`flex-row items-center px-4 py-4 border-b border-gray-100 ${
+        hasUnread ? 'bg-pink-50' : 'bg-white'
+      }`}
     >
       <Image
         source={{ uri: avatarUri }}
@@ -40,15 +44,21 @@ const ConversationItem = ({ item, onPress }: Props) => {
       />
 
       <View className="flex-1 justify-center">
-        <Text className="text-sm font-semibold text-gray-900">
+        <Text
+          className={`text-sm ${
+            hasUnread
+              ? 'font-bold text-black'
+              : 'font-semibold text-gray-900'
+          }`}
+        >
           {item.name}
         </Text>
 
         <Text
           numberOfLines={1}
           className={`text-xs mt-1 ${
-            isNewConversation
-              ? 'text-gray-400 italic'
+            hasUnread
+              ? 'text-black font-semibold'
               : 'text-gray-500'
           }`}
         >
@@ -56,10 +66,16 @@ const ConversationItem = ({ item, onPress }: Props) => {
         </Text>
       </View>
 
-      <View className="ml-2">
-        <Text className="text-xs text-gray-400">
+      <View className="ml-2 items-end">
+        <Text
+          className="text-xs"
+        >
           {item.time}
         </Text>
+
+        {hasUnread && (
+          <View className="mt-1 w-2 h-2 bg-pink-400 rounded-full" />
+        )}
       </View>
     </TouchableOpacity>
   );

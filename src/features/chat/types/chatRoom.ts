@@ -17,6 +17,7 @@ export interface ChatRoomListItem {
   };
   lastMessage: string | null;
   lastMessageTime: string | null;
+  unreadCount: number;
   createdAt: string;
 }
 
