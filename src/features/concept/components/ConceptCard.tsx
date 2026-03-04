@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import { Text } from '@shared/components/common';
 import { DEFAULT_IMAGES } from '@shared/constants';
+import { getSafeImage } from '@shared/utils/safeImage';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { HomeStackParamList } from '@navigation/HomeStackNavigator';
@@ -18,29 +19,16 @@ const ConceptCard = ({ item }: Props) => {
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
   const [aspectRatio, setAspectRatio] = useState(FALLBACK_RATIO);
-  const [hasImageError, setHasImageError] = useState(false);
-  const [hasAvatarError, setHasAvatarError] = useState(false);
-
-  const thumbnailSource = hasImageError
-    ? { uri: DEFAULT_IMAGES.DEFAULT_CONCEPT }
-    : {
-      uri:
-          item.thumbnailUrl || DEFAULT_IMAGES.DEFAULT_CONCEPT,
-    };
-
-  const avatarSource = hasAvatarError
-    ? { uri: DEFAULT_IMAGES.DEFAULT_AVATAR }
-    : {
-      uri:
-          item.photographerAvatar ||
-          DEFAULT_IMAGES.DEFAULT_AVATAR,
-    };
+  const [imageError, setImageError] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   useEffect(() => {
-    if (!item.thumbnailUrl) return;
+    const safeThumbnail = getSafeImage(item.thumbnailUrl);
+
+    if (!safeThumbnail) return;
 
     Image.getSize(
-      item.thumbnailUrl,
+      safeThumbnail,
       (width, height) => {
         if (width && height) {
           setAspectRatio(width / height);
@@ -51,6 +39,20 @@ const ConceptCard = ({ item }: Props) => {
       },
     );
   }, [item.thumbnailUrl]);
+
+  const thumbnailUri = imageError
+    ? DEFAULT_IMAGES.DEFAULT_CONCEPT
+    : getSafeImage(
+      item.thumbnailUrl,
+      DEFAULT_IMAGES.DEFAULT_CONCEPT,
+    );
+
+  const avatarUri = avatarError
+    ? DEFAULT_IMAGES.DEFAULT_AVATAR
+    : getSafeImage(
+      item.photographerAvatar,
+      DEFAULT_IMAGES.DEFAULT_AVATAR,
+    );
 
   return (
     <TouchableOpacity
@@ -64,10 +66,10 @@ const ConceptCard = ({ item }: Props) => {
     >
       <View style={{ aspectRatio }}>
         <Image
-          source={thumbnailSource}
+          source={{ uri: thumbnailUri }}
           style={{ width: '100%', height: '100%' }}
           resizeMode="cover"
-          onError={() => setHasImageError(true)}
+          onError={() => setImageError(true)}
         />
 
         <View className="absolute top-3 left-3 bg-black/50 px-3 py-1 rounded-full">
@@ -84,9 +86,9 @@ const ConceptCard = ({ item }: Props) => {
 
         <View className="absolute bottom-3 left-3 right-3 flex-row items-center bg-black/50 px-3 py-2 rounded-full">
           <Image
-            source={avatarSource}
+            source={{ uri: avatarUri }}
             className="w-7 h-7 rounded-full mr-2"
-            onError={() => setHasAvatarError(true)}
+            onError={() => setAvatarError(true)}
           />
 
           <Text

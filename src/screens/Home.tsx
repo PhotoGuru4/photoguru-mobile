@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   Image,
@@ -15,6 +15,8 @@ import ConceptMasonry from '@features/concept/components/ConceptMasonry';
 import FilterSection from '@features/concept/components/FilterSection';
 import { useHomeConcepts } from '@features/concept/hooks/useHomeConcepts';
 import { useUser } from '@features/profile/hooks/useUser';
+import { DEFAULT_IMAGES } from '@shared/constants';
+import { getSafeImage } from '@shared/utils/safeImage';
 
 const isCloseToBottom = ({
   layoutMeasurement,
@@ -29,6 +31,7 @@ const isCloseToBottom = ({
 
 const Home = () => {
   const { avatar, displayName } = useUser();
+  const [avatarError, setAvatarError] = useState(false);
 
   const {
     keyword,
@@ -42,6 +45,13 @@ const Home = () => {
     hasNextPage,
     fetchNextPage,
   } = useHomeConcepts();
+
+  const avatarUri = avatarError
+    ? DEFAULT_IMAGES.DEFAULT_AVATAR
+    : getSafeImage(
+      avatar,
+      DEFAULT_IMAGES.DEFAULT_AVATAR,
+    );
 
   const showEmpty =
     !isLoading && concepts.length === 0;
@@ -65,9 +75,11 @@ const Home = () => {
       <View className="px-4 py-6">
         <View className="flex-row items-center gap-3">
           <Image
-            source={{ uri: avatar }}
+            source={{ uri: avatarUri }}
             className="w-14 h-14 rounded-full"
+            onError={() => setAvatarError(true)}
           />
+
           <View>
             <Text className="text-lg font-bold">
               Hi {displayName}

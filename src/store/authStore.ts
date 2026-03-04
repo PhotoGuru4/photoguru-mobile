@@ -5,6 +5,7 @@ import type { User } from '@shared/types/user';
 import { registerAuthHandlers } from '@lib/authSession';
 import { API_ENDPOINTS } from '@shared/constants';
 import { POST } from '@shared/services/apiService';
+import { queryClient } from '@/lib/queryClient';
 
 const secureStorage = {
   getItem: async (key: string): Promise<string | null> =>
@@ -61,6 +62,8 @@ export const useAuthStore = create<AuthState>()(
         } finally {
           await SecureStore.deleteItemAsync('accessToken');
           await SecureStore.deleteItemAsync('refreshToken');
+
+          queryClient.clear();
 
           set({
             user: null,

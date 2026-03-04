@@ -35,7 +35,7 @@ const ChatDetail = () => {
 
   const {
     messages,
-    conceptData,
+    conceptMap,
     loadMore,
     loadingMore,
   } = useChatDetail(conversationId);
@@ -50,9 +50,7 @@ const ChatDetail = () => {
     senderId: currentUserId,
   });
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
     <KeyboardAvoidingView
@@ -71,7 +69,7 @@ const ChatDetail = () => {
             currentUserId={currentUserId}
             concept={
               item.type === MESSAGE_TYPES.CONCEPT
-                ? conceptData
+                ? conceptMap[item.conceptId]
                 : undefined
             }
           />
@@ -98,9 +96,7 @@ const ChatDetail = () => {
             activeOpacity={0.8}
             disabled={isDisabled}
             onPress={handleSend}
-            style={{
-              opacity: isDisabled ? 0.5 : 1,
-            }}
+            style={{ opacity: isDisabled ? 0.5 : 1 }}
             className="w-11 h-11 rounded-full items-center justify-center bg-[#E06B80]"
           >
             <Send size={20} color="white" />

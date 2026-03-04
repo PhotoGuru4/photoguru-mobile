@@ -9,6 +9,7 @@ import {
   Text,
 } from 'react-native';
 import { DEFAULT_IMAGES } from '@shared/constants';
+import { getSafeImage } from '@shared/utils/safeImage';
 
 const { width } = Dimensions.get('window');
 const IMAGE_HEIGHT = 260;
@@ -35,7 +36,9 @@ const ConceptImageSlider = ({ images }: Props) => {
   };
 
   const handleImageError = (index: number) => {
-    setErrorIndexes((prev) => [...prev, index]);
+    setErrorIndexes((prev) =>
+      prev.includes(index) ? prev : [...prev, index],
+    );
   };
 
   return (
@@ -51,23 +54,31 @@ const ConceptImageSlider = ({ images }: Props) => {
         keyExtractor={(_, index) => index.toString()}
         onMomentumScrollEnd={handleScroll}
         contentContainerStyle={{ paddingHorizontal: 16 }}
-        renderItem={({ item, index }) => (
-          <View
-            style={{ width: ITEM_WIDTH, height: IMAGE_HEIGHT }}
-            className="mr-4 rounded-2xl overflow-hidden bg-gray-100 items-center justify-center"
-          >
-            <Image
-              source={
-                errorIndexes.includes(index)
-                  ? { uri: DEFAULT_IMAGES.DEFAULT_SLIDER_IMAGE }
-                  : { uri: item }
-              }
-              className="w-full h-full"
-              resizeMode="contain"
-              onError={() => handleImageError(index)}
-            />
-          </View>
-        )}
+        renderItem={({ item, index }) => {
+          const imageUri = errorIndexes.includes(index)
+            ? DEFAULT_IMAGES.DEFAULT_SLIDER_IMAGE
+            : getSafeImage(
+              item,
+              DEFAULT_IMAGES.DEFAULT_SLIDER_IMAGE,
+            );
+
+          return (
+            <View
+              style={{
+                width: ITEM_WIDTH,
+                height: IMAGE_HEIGHT,
+              }}
+              className="mr-4 rounded-2xl overflow-hidden bg-gray-100 items-center justify-center"
+            >
+              <Image
+                source={{ uri: imageUri }}
+                className="w-full h-full"
+                resizeMode="contain"
+                onError={() => handleImageError(index)}
+              />
+            </View>
+          );
+        }}
       />
 
       {images.length > 1 && (
