@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import { Text } from '@shared/components/common';
 import { Star, MapPin, MessageCircle } from 'lucide-react-native';
 import { DEFAULT_IMAGES } from '@shared/constants';
+import { getSafeImage } from '@shared/utils/safeImage';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { MainTabParamList } from '@navigation/TabNavigator';
@@ -31,9 +32,17 @@ const PhotographerCard = ({
   currentUserId,
 }: Props) => {
   const navigation = useNavigation<NavigationProp>();
-
   const { createRoomAndSendConcept, isCreating } =
     useChatMessages();
+
+  const [avatarError, setAvatarError] = useState(false);
+
+  const avatarUri = avatarError
+    ? DEFAULT_IMAGES.DEFAULT_AVATAR
+    : getSafeImage(
+      photographer.avatarUrl,
+      DEFAULT_IMAGES.DEFAULT_AVATAR,
+    );
 
   const handleChat = async () => {
     try {
@@ -57,12 +66,9 @@ const PhotographerCard = ({
     <View className="flex-row items-center justify-between mb-4">
       <View className="flex-row items-center gap-3">
         <Image
-          source={{
-            uri:
-              photographer.avatarUrl ||
-              DEFAULT_IMAGES.DEFAULT_AVATAR,
-          }}
+          source={{ uri: avatarUri }}
           className="w-12 h-12 rounded-full"
+          onError={() => setAvatarError(true)}
         />
 
         <View>

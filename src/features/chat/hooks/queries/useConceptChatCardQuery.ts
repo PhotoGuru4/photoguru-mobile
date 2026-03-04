@@ -1,11 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { getChatConceptCard } from '@features/chat/services/chatService';
 
-export const useConceptChatCardQuery = (conceptId?: number) => {
-  return useQuery({
-    queryKey: ['concept-chat-card', conceptId],
-    queryFn: () => getChatConceptCard(conceptId!),
-    enabled: !!conceptId,
-    staleTime: 1000 * 60 * 5,
+export const useConceptChatCardQueries = (
+  conceptIds: number[],
+) => {
+  return useQueries({
+    queries: conceptIds.map((id) => ({
+      queryKey: ['concept-chat-card', id],
+      queryFn: () => getChatConceptCard(id),
+      enabled: !!id,
+      staleTime: 1000 * 60 * 5,
+    })),
   });
 };
