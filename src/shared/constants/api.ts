@@ -20,5 +20,8 @@ export const API_ENDPOINTS = {
     CREATECHATROOM: '/chat-rooms',
     CHATCONCEPTCARD: (conceptId: number) => `/concepts/${conceptId}/chat-card`,
   },
-
+  AI_GUIDE: {
+    ANALYZE: '/ai-guide/analyze',
+    EDIT: '/ai-guide/edit',
+  },
 };
