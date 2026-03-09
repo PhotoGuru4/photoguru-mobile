@@ -3,8 +3,17 @@ export default {
     name: "photoguru-mobile",
     slug: "photoguru-mobile",
     version: "1.0.0",
+    owner: "holykimsa",
+
+    android: {
+      package: "com.holykimsa.photoguru"
+    },
 
     extra: {
+      eas: {
+        projectId: "b65412a7-df5c-4596-a861-07303c2b2bae"
+      },
+
       apiUrl: process.env.EXPO_PUBLIC_API_URL,
 
       firebaseApiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
