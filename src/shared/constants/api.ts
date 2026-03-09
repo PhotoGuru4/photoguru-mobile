@@ -3,6 +3,7 @@ export const API_ENDPOINTS = {
     REGISTER: '/auth/register',
     LOGIN: '/auth/login',
     LOGOUT: '/auth/logout',
+    REFRESH: '/auth/refresh',
   },
   LOCATION: 'https://provinces.open-api.vn/api/v2',
   CONCEPT: {
@@ -20,5 +21,8 @@ export const API_ENDPOINTS = {
     CREATECHATROOM: '/chat-rooms',
     CHATCONCEPTCARD: (conceptId: number) => `/concepts/${conceptId}/chat-card`,
   },
-
+  AI_GUIDE: {
+    ANALYZE: '/ai-guide/analyze',
+    EDIT: '/ai-guide/edit',
+  },
 };

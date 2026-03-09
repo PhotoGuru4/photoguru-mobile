@@ -15,9 +15,9 @@ interface SearchBarProps {
 }
 
 const sizeStyles: Record<SearchBarSize, string> = {
-  sm: 'px-3 py-0.3 rounded-full',
-  md: 'px-3 py-1 rounded-full',
-  lg: 'px-3 py-1.5 rounded-full',
+  sm: 'px-3 h-12 rounded-full',
+  md: 'px-3 h-14 rounded-full',
+  lg: 'px-3 h-16 rounded-full',
 };
 
 const textSizes: Record<SearchBarSize, string> = {
@@ -43,8 +43,7 @@ export const SearchBar = ({
   return (
     <View
       className={clsx(
-        'flex-row items-center gap-2',
-        'w-full border border-gray-200 bg-white',
+        'flex-row items-center gap-2 w-full border border-gray-200 bg-white',
         sizeStyles[size],
         className,
       )}
@@ -52,6 +51,7 @@ export const SearchBar = ({
       <TouchableOpacity
         disabled={!onSubmit}
         onPress={onSubmit}
+        activeOpacity={0.7}
       >
         <Search size={iconSizes[size]} color="#9CA3AF" />
       </TouchableOpacity>
@@ -61,10 +61,7 @@ export const SearchBar = ({
         onChangeText={onChange}
         placeholder={placeholder}
         placeholderTextColor="#9CA3AF"
-        className={clsx(
-          'flex-1 text-gray-700',
-          textSizes[size],
-        )}
+        className={clsx('flex-1 text-gray-700', textSizes[size])}
         returnKeyType="search"
         onSubmitEditing={onSubmit}
         clearButtonMode="while-editing"
