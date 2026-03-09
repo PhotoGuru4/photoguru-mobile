@@ -1,11 +1,10 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   View,
   FlatList,
   TextInput,
-  KeyboardAvoidingView,
   TouchableOpacity,
-  Platform,
+  Keyboard,
 } from 'react-native';
 import { Send } from 'lucide-react-native';
 import { useRoute } from '@react-navigation/native';
@@ -33,6 +32,23 @@ const ChatDetail = () => {
   const { user } = useAuthStore();
   const currentUserId = user?.id ?? 0;
 
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+
+    const hide = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+
   const {
     messages,
     conceptMap,
@@ -53,9 +69,9 @@ const ChatDetail = () => {
   if (!user) return null;
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    <View
       className="flex-1 bg-white"
+      style={{ paddingBottom: Math.max(keyboardHeight - 50, 0) }}
     >
       <FlatList
         ref={flatListRef}
@@ -81,7 +97,7 @@ const ChatDetail = () => {
         }
       />
 
-      <View className="border-t border-gray-200 px-4 py-3">
+      <View className="border-t border-gray-200 px-4 py-3 bg-white">
         <View className="flex-row items-center gap-2">
           <TextInput
             value={message}
@@ -103,7 +119,7 @@ const ChatDetail = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
