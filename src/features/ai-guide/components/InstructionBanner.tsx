@@ -7,7 +7,7 @@ interface InstructionBannerProps {
 }
 
 export const InstructionBanner = ({ instruction }: InstructionBannerProps) => {
-  if (instruction === '') return null;
+  if (!instruction) return null;
 
   return (
     <View className="absolute top-10 left-5 right-5 bg-black/80 p-4 rounded-xl">

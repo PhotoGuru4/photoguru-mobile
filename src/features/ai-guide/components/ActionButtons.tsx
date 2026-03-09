@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { RotateCw, Check, RefreshCw } from 'lucide-react-native';
 import { Button, Text } from '@shared/components/common';
-import { AI_GUIDE_LABELS } from '@/shared/constants/aiGuide';
+import { AI_GUIDE_LABELS } from '@shared/constants/aiGuide';
 
 interface ActionButtonsProps {
   onRetake: () => void;

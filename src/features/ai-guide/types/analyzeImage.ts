@@ -1,4 +1,6 @@
+import { AnalyzeStatus } from '@shared/constants/aiGuide';
+
 export interface AnalyzeImageResponse {
   instruction: string;
-  status: 'needs_adjustment' | 'good';
+  status: AnalyzeStatus;
 }

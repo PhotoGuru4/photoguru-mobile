@@ -1,7 +1,7 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import { AI_GUIDE_MESSAGES } from '@shared/constants/messages/aiGuide';
 import { showError } from '@shared/utils/toast';
-import { AI_GUIDE_CONFIG } from '@/shared/constants/aiGuide';
+import { AI_GUIDE_CONFIG } from '@shared/constants/aiGuide';
 interface UseEnhancePhotoProps {
   currentBase64: string | null;
   lastInstruction: string;

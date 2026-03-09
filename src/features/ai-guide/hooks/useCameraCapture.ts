@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { CameraView } from 'expo-camera';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { AI_GUIDE_CONFIG } from '@/shared/constants/aiGuide';
+import { AI_GUIDE_CONFIG } from '@shared/constants/aiGuide';
 
 type CameraFacing = typeof AI_GUIDE_CONFIG.FACING_FRONT | typeof AI_GUIDE_CONFIG.FACING_BACK;
 

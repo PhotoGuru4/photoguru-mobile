@@ -31,3 +31,11 @@ export const AI_GUIDE_MODES = {
   CAMERA: 'camera',
   PREVIEW: 'preview',
 } as const;
+
+export const AI_ANALYZE_STATUS = {
+  NEEDS_ADJUSTMENT: 'needs_adjustment',
+  GOOD: 'good',
+} as const;
+
+export type AnalyzeStatus =
+  (typeof AI_ANALYZE_STATUS)[keyof typeof AI_ANALYZE_STATUS];

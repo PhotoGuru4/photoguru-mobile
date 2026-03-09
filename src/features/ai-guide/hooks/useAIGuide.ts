@@ -5,7 +5,7 @@ import { useAnalyzeImageMutation } from '@features/ai-guide/hooks/mutations/useA
 import { useEditImageMutation } from '@features/ai-guide/hooks/mutations/useEditImageMutation';
 
 import { AnalyzeImageResponse } from '@features/ai-guide/types/analyzeImage';
-import { AI_GUIDE_CONFIG } from '@/shared/constants/aiGuide';
+import { AI_GUIDE_CONFIG } from '@shared/constants/aiGuide';
 
 export const useAIGuide = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);

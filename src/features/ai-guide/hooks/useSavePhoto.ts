@@ -2,7 +2,7 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system/legacy';
 import { showError, showSuccess, showInfo } from '@shared/utils/toast';
 import { AI_GUIDE_MESSAGES } from '@shared/constants/messages/aiGuide';
-import { AI_GUIDE_CONFIG } from '@/shared/constants/aiGuide';
+import { AI_GUIDE_CONFIG } from '@shared/constants/aiGuide';
 
 export const useSavePhoto = () => {
   const[mediaPermission, requestMediaPermission] = MediaLibrary.usePermissions();

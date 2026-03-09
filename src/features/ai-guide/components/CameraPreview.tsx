@@ -2,10 +2,13 @@ import React from 'react';
 import { CameraView } from 'expo-camera';
 import { RotateCw } from 'lucide-react-native';
 import { Button } from '@shared/components/common';
+import { AI_GUIDE_CONFIG } from '@shared/constants/aiGuide';
+
+type CameraFacing = typeof AI_GUIDE_CONFIG.FACING_FRONT | typeof AI_GUIDE_CONFIG.FACING_BACK;
 
 interface CameraPreviewProps {
   cameraRef: React.RefObject<React.ElementRef<typeof CameraView> | null>;
-  cameraFacing: 'front' | 'back';
+  cameraFacing: CameraFacing;
   onToggleFacing: () => void;
 }
 

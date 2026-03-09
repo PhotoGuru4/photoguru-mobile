@@ -16,11 +16,11 @@ import { ActionButtons } from '@features/ai-guide/components/ActionButtons';
 import { AI_GUIDE_MESSAGES } from '@shared/constants/messages/aiGuide';
 import { showError } from '@shared/utils/toast';
 import { Button, Text } from '@shared/components/common';
-import { AI_GUIDE_LABELS, AI_GUIDE_CONFIG, AI_GUIDE_MODES } from '@/shared/constants/aiGuide';
+import { AI_GUIDE_LABELS, AI_GUIDE_CONFIG, AI_GUIDE_MODES } from '@shared/constants/aiGuide';
 
 type ScreenMode = typeof AI_GUIDE_MODES.CAMERA | typeof AI_GUIDE_MODES.PREVIEW;
 
-export default function AIGuide() {
+const AIGuide = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const { token } = useAuthStore();
 
@@ -145,4 +145,6 @@ export default function AIGuide() {
       )}
     </View>
   );
-}
+};
+
+export default AIGuide;
