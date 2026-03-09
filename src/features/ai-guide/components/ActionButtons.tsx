@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { RotateCw, Check, RefreshCw } from 'lucide-react-native';
+import { Button, Text } from '@shared/components/common';
+import { AI_GUIDE_LABELS } from '@/shared/constants/aiGuide';
 
 interface ActionButtonsProps {
   onRetake: () => void;
@@ -12,32 +14,46 @@ interface ActionButtonsProps {
 export const ActionButtons = ({ onRetake, onSave, onReanalyze, isAnalyzing }: ActionButtonsProps) => {
   return (
     <View className="absolute bottom-8 left-8 right-8 flex-row justify-around gap-3">
-      <TouchableOpacity
+      <Button
+        unstyled
         onPress={onRetake}
-        className="flex-1 bg-white/20 py-4 rounded-full items-center"
+        className="flex-1 bg-white/20 py-4 rounded-full"
       >
-        <RotateCw size={20} color="#fff" />
-        <Text className="text-xs text-white font-semibold mt-1">Take again</Text>
-      </TouchableOpacity>
+        <View className="items-center">
+          <RotateCw size={20} color="#fff" />
+          <Text variant="small" color="white" className="mt-1">
+            {AI_GUIDE_LABELS.TAKE_AGAIN}
+          </Text>
+        </View>
+      </Button>
 
-      <TouchableOpacity
+      <Button
+        unstyled
         onPress={onSave}
-        className="flex-1 bg-[#E06B80] py-4 rounded-full items-center"
+        className="flex-1 bg-[#E06B80] py-4 rounded-full"
       >
-        <Check size={22} color="#fff" strokeWidth={3} />
-        <Text className="text-xs text-white font-semibold mt-1">Save</Text>
-      </TouchableOpacity>
+        <View className="items-center">
+          <Check size={22} color="#fff" strokeWidth={3} />
+          <Text variant="small" color="white" className="mt-1">
+            {AI_GUIDE_LABELS.SAVE}
+          </Text>
+        </View>
+      </Button>
 
-      <TouchableOpacity
-        onPress={onReanalyze}
+      <Button
+        unstyled
         disabled={isAnalyzing}
-        className="flex-1 bg-white/20 py-4 rounded-full items-center"
+        onPress={onReanalyze}
+        className="flex-1 bg-white/20 py-4 rounded-full"
       >
-        <RefreshCw size={20} color="#fff" />
-        <Text className="text-xs text-white font-semibold mt-1">
-          {isAnalyzing ? 'Analyzing...' : 'Analyze'}
-        </Text>
-      </TouchableOpacity>
+        <View className="items-center">
+          <RefreshCw size={20} color="#fff" />
+          <Text variant="small" color="white" className="mt-1">
+            {isAnalyzing ? AI_GUIDE_LABELS.ANALYZING : AI_GUIDE_LABELS.ANALYZE}
+          </Text>
+        </View>
+      </Button>
+
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { View } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
 import { useAuthStore } from '@store/authStore';
 import { useAIGuide } from '@features/ai-guide/hooks/useAIGuide';
@@ -13,14 +13,18 @@ import { ImagePreview } from '@features/ai-guide/components/ImagePreview';
 import { InstructionBanner } from '@features/ai-guide/components/InstructionBanner';
 import { EnhanceButton } from '@features/ai-guide/components/EnhanceButton';
 import { ActionButtons } from '@features/ai-guide/components/ActionButtons';
+import { AI_GUIDE_MESSAGES } from '@shared/constants/messages/aiGuide';
+import { showError } from '@shared/utils/toast';
+import { Button, Text } from '@shared/components/common';
+import { AI_GUIDE_LABELS, AI_GUIDE_CONFIG, AI_GUIDE_MODES } from '@/shared/constants/aiGuide';
 
-type ScreenMode = 'camera' | 'preview';
+type ScreenMode = typeof AI_GUIDE_MODES.CAMERA | typeof AI_GUIDE_MODES.PREVIEW;
 
 export default function AIGuide() {
   const [permission, requestPermission] = useCameraPermissions();
   const { token } = useAuthStore();
 
-  const [mode, setMode] = useState<ScreenMode>('camera');
+  const [mode, setMode] = useState<ScreenMode>(AI_GUIDE_MODES.CAMERA);
   const[capturedImage, setCapturedImage] = useState<string | null>(null);
   const[currentBase64, setCurrentBase64] = useState<string | null>(null);
 
@@ -48,33 +52,33 @@ export default function AIGuide() {
 
   const handleCaptureAndAnalyze = async () => {
     if (!token) {
-      Alert.alert('Error', 'Please sign in first');
+      showError('Error', AI_GUIDE_MESSAGES.AUTH_REQUIRED);
       return;
     }
 
     const photo = await capturePhoto();
 
     if (!photo) {
-      Alert.alert('Error', 'Failed to capture photo');
+      showError('Error', AI_GUIDE_MESSAGES.CAPTURE_ERROR);
       return;
     }
 
     setCapturedImage(photo.uri);
     setCurrentBase64(photo.base64);
-    setMode('preview');
+    setMode(AI_GUIDE_MODES.PREVIEW);
 
-    await analyzeSingleImage(photo.base64, 'portrait');
+    await analyzeSingleImage(photo.base64, AI_GUIDE_CONFIG.DEFAULT_CONTEXT);
   };
 
   const handleReanalyze = async () => {
     if (!currentBase64) return;
-    await analyzeSingleImage(currentBase64, 'portrait');
+    await analyzeSingleImage(currentBase64, AI_GUIDE_CONFIG.DEFAULT_CONTEXT);
   };
 
   const handleRetake = () => {
     stopSpeaking();
     setLastInstruction('');
-    setMode('camera');
+    setMode(AI_GUIDE_MODES.CAMERA);
     setCapturedImage(null);
     setCurrentBase64(null);
   };
@@ -86,22 +90,29 @@ export default function AIGuide() {
   if (!permission.granted) {
     return (
       <View className="flex-1 bg-black justify-center items-center">
-        <Text className="text-white text-lg mb-5 text-center">
-          Camera permission required
-        </Text>
-        <TouchableOpacity
-          onPress={requestPermission}
-          className="bg-[#E06B80] px-8 py-4 rounded-full"
+        <Text
+          variant="subtitle"
+          color="white"
+          align="center"
+          className="mb-5"
         >
-          <Text className="text-white font-semibold text-base">Grant Permission</Text>
-        </TouchableOpacity>
+          {AI_GUIDE_LABELS.PERMISSION_TITLE}
+        </Text>
+
+        <Button
+          onPress={requestPermission}
+          color="pink"
+          size="lg"
+        >
+          {AI_GUIDE_LABELS.GRANT_PERMISSION}
+        </Button>
       </View>
     );
   }
 
   return (
     <View className="flex-1 bg-black">
-      {mode === 'camera' ? (
+      {mode === AI_GUIDE_MODES.CAMERA ? (
         <>
           <CameraPreview
             cameraRef={cameraRef}

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
+import { Button } from '@shared/components/common';
 
 interface CaptureButtonProps {
   onCapture: () => void;
@@ -9,9 +10,10 @@ interface CaptureButtonProps {
 export const CaptureButton = ({ onCapture, isAnalyzing }: CaptureButtonProps) => {
   return (
     <View className="absolute bottom-0 left-0 right-0 items-center pb-10">
-      <TouchableOpacity
+      <Button
         onPress={onCapture}
         disabled={isAnalyzing}
+        unstyled
         className="w-20 h-20 rounded-full bg-white items-center justify-center"
       >
         {isAnalyzing ? (
@@ -19,7 +21,7 @@ export const CaptureButton = ({ onCapture, isAnalyzing }: CaptureButtonProps) =>
         ) : (
           <View className="w-16 h-16 rounded-full bg-gray-100" />
         )}
-      </TouchableOpacity>
+      </Button>
     </View>
   );
 };

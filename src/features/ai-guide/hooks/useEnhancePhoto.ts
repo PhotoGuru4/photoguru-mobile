@@ -1,6 +1,7 @@
-import { Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
-
+import { AI_GUIDE_MESSAGES } from '@shared/constants/messages/aiGuide';
+import { showError } from '@shared/utils/toast';
+import { AI_GUIDE_CONFIG } from '@/shared/constants/aiGuide';
 interface UseEnhancePhotoProps {
   currentBase64: string | null;
   lastInstruction: string;
@@ -22,7 +23,7 @@ export const useEnhancePhoto = ({
 }: UseEnhancePhotoProps) => {
   const handleEnhanceWithAI = async () => {
     if (!currentBase64 || !lastInstruction) {
-      Alert.alert('No instruction', 'Please analyze the photo first.');
+      showError('No instruction', AI_GUIDE_MESSAGES.NO_INSTRUCTION);
       return;
     }
 
@@ -36,7 +37,7 @@ export const useEnhancePhoto = ({
 
       console.log('Edited base64 from API:', editedBase64?.substring(0, 100));
 
-      const filename = `photoguru_edit_${Date.now()}.jpg`;
+      const filename = `${AI_GUIDE_CONFIG.FILE_PREFIX_EDIT}${Date.now()}.jpg`;
       const fileUri = FileSystem.documentDirectory + filename;
 
       const base64Data = editedBase64.includes('base64,')
@@ -51,7 +52,7 @@ export const useEnhancePhoto = ({
       setCurrentBase64(base64Data);
     } catch (error) {
       console.error('Enhance error:', error);
-      Alert.alert('Error', 'Failed to enhance image. Please try again.');
+      showError('Error', AI_GUIDE_MESSAGES.ENHANCE_ERROR);
     }
   };
 

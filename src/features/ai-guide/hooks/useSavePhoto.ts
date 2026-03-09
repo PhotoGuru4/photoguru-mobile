@@ -1,6 +1,8 @@
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system/legacy';
-import { Alert } from 'react-native';
+import { showError, showSuccess, showInfo } from '@shared/utils/toast';
+import { AI_GUIDE_MESSAGES } from '@shared/constants/messages/aiGuide';
+import { AI_GUIDE_CONFIG } from '@/shared/constants/aiGuide';
 
 export const useSavePhoto = () => {
   const[mediaPermission, requestMediaPermission] = MediaLibrary.usePermissions();
@@ -12,10 +14,7 @@ export const useSavePhoto = () => {
       const { granted } = await requestMediaPermission();
 
       if (!granted) {
-        Alert.alert(
-          'Permission Required',
-          'App needs library access to save photos',
-        );
+        showInfo('Permission Required', AI_GUIDE_MESSAGES.PERMISSION_REQUIRED);
         return;
       }
     }
@@ -24,7 +23,7 @@ export const useSavePhoto = () => {
       let uriToSave = capturedImage;
 
       if (capturedImage.startsWith('data:image')) {
-        const filename = `photoguru_${Date.now()}.jpg`;
+        const filename = `${AI_GUIDE_CONFIG.FILE_PREFIX_SAVE}${Date.now()}.jpg`;
         const fileUri = FileSystem.documentDirectory + filename;
 
         const base64Data = capturedImage.split(',')[1];
@@ -38,11 +37,11 @@ export const useSavePhoto = () => {
 
       const asset = await MediaLibrary.createAssetAsync(uriToSave);
 
-      await MediaLibrary.createAlbumAsync('PhotoGuru', asset, false);
+      await MediaLibrary.createAlbumAsync(AI_GUIDE_CONFIG.ALBUM_NAME, asset, false);
 
-      Alert.alert('Success', 'Photo saved to library');
+      showSuccess('Success', AI_GUIDE_MESSAGES.SAVE_SUCCESS);
     } catch {
-      Alert.alert('Error', 'Failed to save photo');
+      showError('Error', AI_GUIDE_MESSAGES.SAVE_ERROR);
     }
   };
 

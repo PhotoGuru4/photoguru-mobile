@@ -1,34 +1,35 @@
 import React, { useRef, useState } from 'react';
 import { CameraView } from 'expo-camera';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { AI_GUIDE_CONFIG } from '@/shared/constants/aiGuide';
 
-type CameraFacing = 'front' | 'back';
+type CameraFacing = typeof AI_GUIDE_CONFIG.FACING_FRONT | typeof AI_GUIDE_CONFIG.FACING_BACK;
 
 export const useCameraCapture = () => {
   const cameraRef = useRef<React.ElementRef<typeof CameraView>>(null);
-  const[cameraFacing, setCameraFacing] = useState<CameraFacing>('front');
+  const[cameraFacing, setCameraFacing] = useState<CameraFacing>(AI_GUIDE_CONFIG.FACING_FRONT);
 
   const capturePhoto = async (): Promise<{ uri: string; base64: string } | null> => {
     if (!cameraRef.current) return null;
 
     try {
       const photo = await cameraRef.current.takePictureAsync({
-        quality: 0.8,
+        quality: AI_GUIDE_CONFIG.CAMERA_QUALITY,
         base64: true,
       });
 
       if (!photo?.base64) return null;
 
-      const manipulations: ImageManipulator.Action[] =[{ resize: { width: 512 } }];
+      const manipulations: ImageManipulator.Action[] =[{ resize: { width: AI_GUIDE_CONFIG.IMAGE_RESIZE_WIDTH } }];
 
-      if (cameraFacing === 'front') {
+      if (cameraFacing === AI_GUIDE_CONFIG.FACING_FRONT) {
         manipulations.push({ flip: ImageManipulator.FlipType.Horizontal });
       }
 
       const manipulated = await ImageManipulator.manipulateAsync(
         photo.uri,
         manipulations,
-        { base64: true, compress: 0.7 },
+        { base64: true, compress: AI_GUIDE_CONFIG.IMAGE_COMPRESS },
       );
 
       return {
@@ -42,7 +43,7 @@ export const useCameraCapture = () => {
   };
 
   const handleToggleCameraFacing = () => {
-    setCameraFacing((prev) => (prev === 'front' ? 'back' : 'front'));
+    setCameraFacing((prev) => (prev === AI_GUIDE_CONFIG.FACING_FRONT ? AI_GUIDE_CONFIG.FACING_BACK : AI_GUIDE_CONFIG.FACING_FRONT));
   };
 
   return {

@@ -1,7 +1,7 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
 import { CameraView } from 'expo-camera';
 import { RotateCw } from 'lucide-react-native';
+import { Button } from '@shared/components/common';
 
 interface CameraPreviewProps {
   cameraRef: React.RefObject<React.ElementRef<typeof CameraView> | null>;
@@ -14,12 +14,13 @@ export const CameraPreview = ({ cameraRef, cameraFacing, onToggleFacing }: Camer
     <>
       <CameraView ref={cameraRef} style={{ flex: 1 }} facing={cameraFacing} />
 
-      <TouchableOpacity
+      <Button
         onPress={onToggleFacing}
+        unstyled
         className="absolute top-10 right-5 w-11 h-11 rounded-full bg-black/50 items-center justify-center"
       >
         <RotateCw size={24} color="#fff" />
-      </TouchableOpacity>
+      </Button>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { POST } from '@shared/services/apiService';
 import { API_ENDPOINTS } from '@shared/constants';
-import { AnalyzeImageResponse } from '../types/analyzeImage';
-import { EditImageResponse } from '../types/editImage';
+import { AnalyzeImageResponse } from '@features/ai-guide/types/analyzeImage';
+import { EditImageResponse } from '@features/ai-guide/types/editImage';
 
 export const analyzeImage = async (
   imageBase64: string,

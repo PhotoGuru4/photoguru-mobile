@@ -1,6 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { Wand2 } from 'lucide-react-native';
+import { Button } from '@shared/components/common';
 
 interface EnhanceButtonProps {
   onEnhance: () => void;
@@ -10,26 +11,19 @@ interface EnhanceButtonProps {
 
 export const EnhanceButton = ({ onEnhance, disabled, isEditing }: EnhanceButtonProps) => {
   return (
-    <TouchableOpacity
+    <Button
       onPress={onEnhance}
       disabled={disabled}
-      style={{
-        position: 'absolute',
-        bottom: 180,
-        right: 20,
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        backgroundColor: disabled ? '#888' : '#E06B80',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
+      unstyled
+      className={`absolute bottom-[180px] right-5 w-14 h-14 rounded-full items-center justify-center ${
+        disabled ? 'bg-gray-400' : 'bg-[#E06B80]'
+      }`}
     >
       {isEditing ? (
         <ActivityIndicator size="small" color="#fff" />
       ) : (
         <Wand2 size={24} color="#fff" />
       )}
-    </TouchableOpacity>
+    </Button>
   );
 };

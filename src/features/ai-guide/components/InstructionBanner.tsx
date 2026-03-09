@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import { Text } from '@shared/components/common';
 
 interface InstructionBannerProps {
   instruction: string;
@@ -10,7 +11,12 @@ export const InstructionBanner = ({ instruction }: InstructionBannerProps) => {
 
   return (
     <View className="absolute top-10 left-5 right-5 bg-black/80 p-4 rounded-xl">
-      <Text className="text-white text-base text-center font-medium">
+      <Text
+        variant="body"
+        color="white"
+        align="center"
+        className="font-medium"
+      >
         {instruction}
       </Text>
     </View>
