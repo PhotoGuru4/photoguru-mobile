@@ -17,6 +17,18 @@ const axiosClient = axios.create({
   withCredentials: true,
 });
 
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const subscribeTokenRefresh = (cb: (token: string) => void) => {
+  refreshSubscribers.push(cb);
+};
+
+const onRefreshed = (token: string) => {
+  refreshSubscribers.forEach((cb) => cb(token));
+  refreshSubscribers = [];
+};
+
 axiosClient.interceptors.request.use(async (config) => {
   const token = await SecureStore.getItemAsync('accessToken');
 
@@ -34,7 +46,8 @@ axiosClient.interceptors.response.use(
 
     const isAuthRoute =
       originalRequest?.url?.includes(API_ENDPOINTS.AUTH.LOGIN) ||
-      originalRequest?.url?.includes('/auth/refresh-token');
+      originalRequest?.url?.includes(API_ENDPOINTS.AUTH.REFRESH) ||
+      originalRequest?.url?.includes(API_ENDPOINTS.AUTH.LOGOUT);
 
     const hasToken = !!(await SecureStore.getItemAsync('accessToken'));
 
@@ -46,26 +59,46 @@ axiosClient.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          subscribeTokenRefresh((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            resolve(axiosClient(originalRequest));
+          });
+        });
+      }
       try {
+        isRefreshing = true;
         const refreshToken =
           await SecureStore.getItemAsync('refreshToken');
 
-        const res = await axios.post(
-          `${API_URL}/auth/refresh-token`,
-          { refreshToken },
+        if (!refreshToken) {
+          notifyLogout();
+          return Promise.reject(error);
+        }
+
+        const res = await axiosClient.post(
+          API_ENDPOINTS.AUTH.REFRESH,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${refreshToken}`,
+            },
+          },
         );
 
-        const { accessToken } = res.data.data;
+        const { access_token } = res.data.data;
 
         await SecureStore.setItemAsync(
           'accessToken',
-          accessToken,
+          access_token,
         );
 
-        notifyTokenUpdate(accessToken);
+        notifyTokenUpdate(access_token);
+        onRefreshed(access_token);
 
         originalRequest.headers.Authorization =
-          `Bearer ${accessToken}`;
+          `Bearer ${access_token}`;
 
         return axiosClient(originalRequest);
       } catch (refreshError) {
@@ -74,6 +107,8 @@ axiosClient.interceptors.response.use(
 
         notifyLogout();
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 

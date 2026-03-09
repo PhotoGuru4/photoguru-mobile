@@ -23,9 +23,9 @@ interface FormInputProps extends Omit<TextInputProps, 'style'> {
 }
 
 const sizeStyles: Record<InputSize, string> = {
-  sm: 'px-3 py-0.5 text-sm rounded-lg',
-  md: 'px-3 py-1.5 text-base rounded-lg',
-  lg: 'px-3 py-2 text-lg rounded-lg',
+  sm: 'px-3 h-12 text-sm rounded-lg',
+  md: 'px-3 h-14 text-base rounded-lg',
+  lg: 'px-3 h-16 text-lg rounded-lg',
 };
 
 export const Input = forwardRef<TextInput, FormInputProps>(
@@ -81,9 +81,7 @@ export const Input = forwardRef<TextInput, FormInputProps>(
         {label && (
           <Text variant="caption" className="text-gray-600 mb-2">
             {label}
-            {required && (
-              <Text className="text-pink-500"> *</Text>
-            )}
+            {required && <Text className="text-pink-500"> *</Text>}
           </Text>
         )}
 
@@ -103,11 +101,8 @@ export const Input = forwardRef<TextInput, FormInputProps>(
                 : 0,
           }}
           className={clsx(
-            'border',
-            'bg-white',
-            icon && 'pr-12',
+            'border bg-white rounded-lg flex-row items-center',
             sizeStyles[inputSize],
-            'rounded-lg',
           )}
         >
           <TextInput
@@ -115,14 +110,14 @@ export const Input = forwardRef<TextInput, FormInputProps>(
             placeholderTextColor="#9CA3AF"
             onFocus={handleFocus}
             onBlur={handleBlur}
-            className={clsx('w-full', className)}
+            className={clsx('flex-1', className)}
             {...props}
           />
 
           {icon && (
             <Pressable
               onPress={onIconClick}
-              className="absolute right-4 top-1/2 -translate-y-1/2"
+              className="ml-2"
               hitSlop={10}
             >
               {icon}
