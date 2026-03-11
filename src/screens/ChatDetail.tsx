@@ -18,10 +18,7 @@ import { useAuthStore } from '@store/authStore';
 import { LoadMoreDots } from '@shared/components/common/LoadMoreDots';
 import type { ChatStackParamList } from '@navigation/ChatStackNavigator';
 
-type ChatDetailRouteProp = RouteProp<
-  ChatStackParamList,
-  'ChatDetail'
->;
+type ChatDetailRouteProp = RouteProp<ChatStackParamList, 'ChatDetail'>;
 
 const ChatDetail = () => {
   const route = useRoute<ChatDetailRouteProp>();
@@ -88,6 +85,7 @@ const ChatDetail = () => {
                 ? conceptMap[item.conceptId]
                 : undefined
             }
+            roomId={conversationId}
           />
         )}
         onEndReached={loadMore}

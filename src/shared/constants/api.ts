@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     SEARCH: '/concepts',
     DETAIL: (id: number) => `/concepts/${id}`,
     RELATED: (id: number) => `/concepts/${id}/related`,
+    PACKAGES: (conceptId: number) => `/concepts/${conceptId}/packages`,
   },
   USER: {
     PROFILE: '/users/profile',
@@ -24,5 +25,15 @@ export const API_ENDPOINTS = {
   AI_GUIDE: {
     ANALYZE: '/ai-guide/analyze',
     EDIT: '/ai-guide/edit',
+  },
+  PHOTOGRAPHERS: {
+    DYNAMIC_SLOTS: (id: number, date: string, pkgId: number) =>
+      `/photographers/${id}/available-slots?date=${date}&packageId=${pkgId}`,
+  },
+  BOOKINGS: {
+    CREATE: '/bookings',
+    DETAIL: (id: number) => `/bookings/${id}`,
+    RESPOND: (id: number) => `/bookings/${id}/respond`,
+    COMPLETE: (id: number) => `/bookings/${id}/complete`,
   },
 };
