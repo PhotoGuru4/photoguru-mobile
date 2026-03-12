@@ -9,6 +9,7 @@ import {
   onSnapshot,
   QueryDocumentSnapshot,
   DocumentData,
+  where,
 } from 'firebase/firestore';
 
 import { db } from '@lib/firebase';
@@ -31,14 +32,12 @@ export const useChatDetail = (
     useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [firstUnreadMessageId, setFirstUnreadMessageId] =
+    useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (!roomId) {
-      setMessages([]);
-      setLastDoc(null);
-      setHasMore(true);
-      return;
-    }
+    if (!roomId) return;
 
     const q = query(
       collection(db, 'chatRooms', roomId, 'messages'),
@@ -56,26 +55,67 @@ export const useChatDetail = (
 
       const docs = snapshot.docs;
 
-      const data = docs.map((doc) => {
-        const raw = doc.data({
+      const newMessages = docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data({
           serverTimestamps: 'estimate',
+        }),
+      })) as Message[];
+
+      setMessages((prev) => {
+        const map = new Map<string, Message>();
+
+        [...prev, ...newMessages].forEach((msg) => {
+          map.set(msg.id, msg);
         });
 
-        return {
-          id: doc.id,
-          ...raw,
-        } as Message;
+        return Array.from(map.values());
       });
 
-      setMessages(data);
       setLastDoc(docs[docs.length - 1]);
       setHasMore(docs.length === PAGE_LIMIT.DEFAULT);
 
-      await markMessagesAsRead(
-        roomId,
-        currentUserId,
-        data,
+      const hasNewMessagesFromOthers = newMessages.some(
+        (msg) => msg.senderId !== currentUserId && !msg.isRead,
       );
+
+      if (hasNewMessagesFromOthers) {
+        await markMessagesAsRead(
+          roomId,
+          currentUserId,
+          newMessages,
+        );
+      }
+    });
+
+    return () => unsubscribe();
+  }, [roomId, currentUserId]);
+
+  useEffect(() => {
+    if (!roomId) return;
+
+    const q = query(
+      collection(db, 'chatRooms', roomId, 'messages'),
+      where('isRead', '==', false),
+      orderBy('createdAt', 'asc'),
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const unreadMessages = snapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Message[];
+
+      const filteredUnread = unreadMessages.filter(
+        (msg) => msg.senderId !== currentUserId,
+      );
+
+      setUnreadCount(filteredUnread.length);
+
+      const firstUnread = filteredUnread[0];
+
+      setFirstUnreadMessageId(firstUnread?.id ?? null);
     });
 
     return () => unsubscribe();
@@ -86,43 +126,58 @@ export const useChatDetail = (
 
     setLoadingMore(true);
 
-    const q = query(
-      collection(db, 'chatRooms', roomId, 'messages'),
-      orderBy('createdAt', 'desc'),
-      startAfter(lastDoc),
-      limit(PAGE_LIMIT.DEFAULT),
-    );
+    try {
+      const q = query(
+        collection(db, 'chatRooms', roomId, 'messages'),
+        orderBy('createdAt', 'desc'),
+        startAfter(lastDoc),
+        limit(PAGE_LIMIT.DEFAULT),
+      );
 
-    const snapshot = await getDocs(q);
+      const snapshot = await getDocs(q);
 
-    if (!snapshot.empty) {
-      const docs = snapshot.docs;
+      if (!snapshot.empty) {
+        const docs = snapshot.docs;
 
-      const olderMessages = docs.map((doc) => {
-        const raw = doc.data({
-          serverTimestamps: 'estimate',
+        const olderMessages = docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data({
+            serverTimestamps: 'estimate',
+          }),
+        })) as Message[];
+
+        setMessages((prev) => {
+          const map = new Map<string, Message>();
+
+          [...prev, ...olderMessages].forEach((msg) => {
+            map.set(msg.id, msg);
+          });
+
+          return Array.from(map.values());
         });
 
-        return {
-          id: doc.id,
-          ...raw,
-        } as Message;
-      });
+        setLastDoc(docs[docs.length - 1]);
+        setHasMore(docs.length === PAGE_LIMIT.DEFAULT);
 
-      setMessages((prev) => [...prev, ...olderMessages]);
-      setLastDoc(docs[docs.length - 1]);
-      setHasMore(docs.length === PAGE_LIMIT.DEFAULT);
+        const hasUnreadFromOthers = olderMessages.some(
+          (msg) => msg.senderId !== currentUserId && !msg.isRead,
+        );
 
-      await markMessagesAsRead(
-        roomId,
-        currentUserId,
-        olderMessages,
-      );
-    } else {
-      setHasMore(false);
+        if (hasUnreadFromOthers) {
+          await markMessagesAsRead(
+            roomId,
+            currentUserId,
+            olderMessages,
+          );
+        }
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error loading more messages:', error);
+    } finally {
+      setLoadingMore(false);
     }
-
-    setLoadingMore(false);
   }, [roomId, lastDoc, hasMore, loadingMore, currentUserId]);
 
   const conceptIds = useMemo(() => {
@@ -138,14 +193,10 @@ export const useChatDetail = (
     );
   }, [messages]);
 
-  const conceptQueries =
-    useConceptChatCardQueries(conceptIds);
+  const conceptQueries = useConceptChatCardQueries(conceptIds);
 
   const conceptMap = useMemo(() => {
-    const map: Record<
-      number,
-      ConceptChatCard | undefined
-    > = {};
+    const map: Record<number, ConceptChatCard | undefined> = {};
 
     conceptIds.forEach((id, index) => {
       map[id] = conceptQueries[index]?.data;
@@ -160,5 +211,7 @@ export const useChatDetail = (
     loadMore,
     loadingMore,
     hasMore,
+    firstUnreadMessageId,
+    unreadCount,
   };
 };

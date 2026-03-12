@@ -1,20 +1,19 @@
-import React, { useRef, useEffect, useState } from 'react';
-import {
-  View,
-  FlatList,
-  TextInput,
-  TouchableOpacity,
-  Keyboard,
-} from 'react-native';
-import { Send } from 'lucide-react-native';
+import React, { useMemo } from 'react';
+import { View, FlatList } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 
 import MessageBubble from '@features/chat/components/MessageBubble';
-import { MESSAGE_TYPES } from '@shared/constants/messageType';
+import ChatInput from '@features/chat/components/ChatInput';
+import UnreadButton from '@features/chat/components/UnreadButton';
+
 import { useChatDetail } from '@features/chat/hooks/useChatDetail';
 import { useSendMessage } from '@features/chat/hooks/useSendMessage';
+import { useScrollToMessage } from '@features/chat/hooks/useScrollToMessage';
+import { useKeyboardHeight } from '@features/chat/hooks/useKeyboardHeight';
+
 import { useAuthStore } from '@store/authStore';
+import { MESSAGE_TYPES } from '@shared/constants/messageType';
 import { LoadMoreDots } from '@shared/components/common/LoadMoreDots';
 import type { ChatStackParamList } from '@navigation/ChatStackNavigator';
 
@@ -23,37 +22,25 @@ type ChatDetailRouteProp = RouteProp<
   'ChatDetail'
 >;
 
+const ITEM_HEIGHT = 70;
+
 const ChatDetail = () => {
+
   const route = useRoute<ChatDetailRouteProp>();
   const conversationId = String(route.params.conversationId);
-
-  const flatListRef = useRef<FlatList>(null);
 
   const { user } = useAuthStore();
   const currentUserId = user?.id ?? 0;
 
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-
-  useEffect(() => {
-    const show = Keyboard.addListener('keyboardDidShow', (e) => {
-      setKeyboardHeight(e.endCoordinates.height);
-    });
-
-    const hide = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardHeight(0);
-    });
-
-    return () => {
-      show.remove();
-      hide.remove();
-    };
-  }, []);
+  const keyboardHeight = useKeyboardHeight();
 
   const {
     messages,
     conceptMap,
     loadMore,
     loadingMore,
+    firstUnreadMessageId,
+    unreadCount,
   } = useChatDetail(conversationId, currentUserId);
 
   const {
@@ -66,6 +53,22 @@ const ChatDetail = () => {
     senderId: currentUserId,
   });
 
+  const sortedMessages = useMemo(() => {
+    return [...messages].sort(
+      (a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0),
+    );
+  }, [messages]);
+
+  const {
+    flatListRef,
+    scrollToMessage,
+    handleScrollToIndexFailed,
+  } = useScrollToMessage(
+    sortedMessages,
+    loadMore,
+    firstUnreadMessageId,
+  );
+
   if (!user) return null;
 
   return (
@@ -75,10 +78,17 @@ const ChatDetail = () => {
     >
       <FlatList
         ref={flatListRef}
-        data={messages}
-        keyExtractor={(item) => String(item.id)}
+        data={sortedMessages}
+        keyExtractor={(item) => item.id}
         inverted
         contentContainerStyle={{ padding: 16 }}
+
+        getItemLayout={(data, index) => ({
+          length: ITEM_HEIGHT,
+          offset: ITEM_HEIGHT * index,
+          index,
+        })}
+
         renderItem={({ item }) => (
           <MessageBubble
             message={item}
@@ -90,35 +100,35 @@ const ChatDetail = () => {
             }
           />
         )}
+
         onEndReached={loadMore}
         onEndReachedThreshold={0.2}
+        onScrollToIndexFailed={handleScrollToIndexFailed}
+
         ListFooterComponent={
           loadingMore ? <LoadMoreDots /> : null
         }
+
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+        }}
       />
 
-      <View className="border-t border-gray-200 px-4 py-3 bg-white">
-        <View className="flex-row items-center gap-2">
-          <TextInput
-            value={message}
-            onChangeText={setMessage}
-            placeholder="Type a message..."
-            returnKeyType="send"
-            onSubmitEditing={handleSend}
-            className="flex-1 bg-gray-100 rounded-full px-4 py-3 text-sm"
-          />
+      <UnreadButton
+        unreadCount={unreadCount}
+        onPress={() => {
+          if (firstUnreadMessageId) {
+            scrollToMessage(firstUnreadMessageId);
+          }
+        }}
+      />
 
-          <TouchableOpacity
-            activeOpacity={0.8}
-            disabled={isDisabled}
-            onPress={handleSend}
-            style={{ opacity: isDisabled ? 0.5 : 1 }}
-            className="w-11 h-11 rounded-full items-center justify-center bg-[#E06B80]"
-          >
-            <Send size={20} color="white" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <ChatInput
+        message={message}
+        setMessage={setMessage}
+        handleSend={handleSend}
+        isDisabled={isDisabled}
+      />
     </View>
   );
 };
