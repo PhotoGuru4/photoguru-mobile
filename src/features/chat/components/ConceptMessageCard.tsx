@@ -1,22 +1,22 @@
 import React, { useCallback, useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
-import { Button, Text } from '@shared/components/common';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { formatPriceRange } from '@shared/utils/formatPriceRange';
 import { getSafeImage } from '@shared/utils/safeImage';
-
+import { Button, Text } from '@shared/components/common';
 import type { ConceptChatCard } from '@features/chat/types/conceptCard';
 import type { MainTabParamList } from '@navigation/TabNavigator';
 import { DEFAULT_IMAGES } from '@shared/constants';
 
 interface Props {
   concept: ConceptChatCard;
+  roomId: string;
 }
 
 type NavigationProp = BottomTabNavigationProp<MainTabParamList>;
 
-const ConceptMessageCard = ({ concept }: Props) => {
+const ConceptMessageCard = ({ concept, roomId }: Props) => {
   const navigation = useNavigation<NavigationProp>();
   const [imageError, setImageError] = useState(false);
 
@@ -27,12 +27,21 @@ const ConceptMessageCard = ({ concept }: Props) => {
     });
   }, [navigation, concept.id]);
 
+  const handleBookNow = useCallback(() => {
+    navigation.navigate('MessagesTab', {
+      screen: 'SelectPackage',
+      params: {
+        conceptId: concept.id,
+        photographerId: concept.photographerId,
+        conceptName: concept.name,
+        roomId,
+      },
+    });
+  }, [navigation, concept.id, concept.photographerId, concept.name, roomId]);
+
   const imageUri = imageError
     ? DEFAULT_IMAGES.DEFAULT_SLIDER_IMAGE
-    : getSafeImage(
-      concept.thumbnailUrl,
-      DEFAULT_IMAGES.DEFAULT_SLIDER_IMAGE,
-    );
+    : getSafeImage(concept.thumbnailUrl, DEFAULT_IMAGES.DEFAULT_SLIDER_IMAGE);
 
   return (
     <TouchableOpacity
@@ -48,23 +57,13 @@ const ConceptMessageCard = ({ concept }: Props) => {
       />
 
       <View className="p-3">
-        <Text variant="subtitle">
-          {concept.name}
-        </Text>
+        <Text variant="subtitle">{concept.name}</Text>
 
-        <Text
-          className="mt-1"
-          variant="body"
-          lineClamp={2}
-        >
+        <Text variant="body" lineClamp={2} className="mt-1">
           {concept.description || 'No description available'}
         </Text>
 
-        <Text
-          variant="subtitle"
-          color="pink"
-          className="font-bold mt-2"
-        >
+        <Text variant="subtitle" color="pink" className="font-bold mt-2">
           {formatPriceRange(concept.minPrice, concept.maxPrice)}
         </Text>
 
@@ -73,7 +72,7 @@ const ConceptMessageCard = ({ concept }: Props) => {
           variant="solid"
           size="sm"
           className="mt-2"
-          onPress={handleNavigate}
+          onPress={handleBookNow}
         >
           Book now
         </Button>

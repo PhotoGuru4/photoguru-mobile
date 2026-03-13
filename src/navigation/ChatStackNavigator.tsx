@@ -5,14 +5,49 @@ import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/
 
 import Messages from '@screens/Messages';
 import ChatDetail from '@screens/ChatDetail';
+import SelectPackageScreen from '@screens/chat/SelectPackageScreen';
+import SelectDateTimeScreen from '@screens/chat/SelectDateTimeScreen';
 import { BackButton } from '@shared/components/common/BackButton';
 import { useAuthStore } from '@store/authStore';
 import { SCREENS } from '@shared/constants';
 import { LogOut } from 'lucide-react-native';
+import ConfirmBookingScreen from '@/screens/chat/ConfirmBookingScreen';
 
 export type ChatStackParamList = {
   Messages: undefined;
   ChatDetail: { conversationId: string };
+  SelectPackage: {
+    conceptId: number;
+    photographerId: number;
+    conceptName: string;
+    roomId: string;
+  };
+  SelectDateTime: {
+    conceptId: number;
+    photographerId: number;
+    packageId: number;
+    packageTier: string;
+    packagePrice: number;
+    packageDescription: string;
+    estimatedDuration: number | null;
+    conceptName: string;
+    roomId: string;
+    address: string;
+  };
+  ConfirmBooking: {
+    conceptId: number;
+    photographerId: number;
+    packageId: number;
+    packageTier: string;
+    packagePrice: number;
+    packageDescription: string;
+    estimatedDuration: number | null;
+    conceptName: string;
+    roomId: string;
+    address: string;
+    bookingDate: string;
+    bookingTime: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<ChatStackParamList>();
@@ -23,7 +58,6 @@ const ChatStackNavigator = () => {
 
   const handleLogout = async () => {
     await logout();
-
     navigation.reset({
       index: 0,
       routes: [{ name: SCREENS.AUTH.LOGIN }],
@@ -35,21 +69,15 @@ const ChatStackNavigator = () => {
       screenOptions={{
         headerTitleAlign: 'center',
         headerShadowVisible: true,
-        headerStyle: {
-          backgroundColor: '#fff',
-        },
+        headerStyle: { backgroundColor: '#fff' },
         headerTitleStyle: {
           fontSize: 16,
           fontWeight: '600',
           color: '#E06B80',
         },
         headerTintColor: '#E06B80',
-
         headerRight: () => (
-          <TouchableOpacity
-            onPress={handleLogout}
-            style={{ marginRight: 16 }}
-          >
+          <TouchableOpacity onPress={handleLogout} style={{ marginRight: 16 }}>
             <LogOut size={22} color="#E06B80" />
           </TouchableOpacity>
         ),
@@ -60,12 +88,9 @@ const ChatStackNavigator = () => {
         component={Messages}
         options={{
           title: 'Messages',
-          headerLeft: () => (
-            <BackButton size={30} fallback="HomeTab" />
-          ),
+          headerLeft: () => <BackButton size={30} fallback="HomeTab" />,
         }}
       />
-
       <Stack.Screen
         name="ChatDetail"
         component={ChatDetail}
@@ -73,6 +98,21 @@ const ChatStackNavigator = () => {
           title: 'Chat Detail',
           headerLeft: () => <BackButton size={30} />,
         }}
+      />
+      <Stack.Screen
+        name="SelectPackage"
+        component={SelectPackageScreen}
+        options={{ title: 'Select Package' }}
+      />
+      <Stack.Screen
+        name="SelectDateTime"
+        component={SelectDateTimeScreen}
+        options={{ title: 'Select Date & Time' }}
+      />
+      <Stack.Screen
+        name="ConfirmBooking"
+        component={ConfirmBookingScreen}
+        options={{ title: 'Confirm Booking' }}
       />
     </Stack.Navigator>
   );

@@ -5,6 +5,7 @@ export interface ConceptChatCard {
   minPrice: number;
   maxPrice: number;
   thumbnailUrl: string;
+  photographerId: number;
 
   photographer: {
     id: number;
