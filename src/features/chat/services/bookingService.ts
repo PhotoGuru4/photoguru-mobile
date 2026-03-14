@@ -1,25 +1,11 @@
 import { GET, POST, PATCH } from '@shared/services/apiService';
 import { API_ENDPOINTS } from '@shared/constants';
-import type { Booking, PackageLocation } from '../types/booking';
-
-export interface PackageItem {
-  id: number;
-  tier: string;
-  price: number;
-  description: string | null;
-  estimatedDuration: number | null;
-  locations: PackageLocation[];
-}
+import type { Booking, PackageItem, ScheduleSlot, CreateBooking } from '@features/chat/types/booking';
+import type { BOOKING_STATUS } from '@shared/constants/booking';
 
 export const getConceptPackages = (conceptId: number): Promise<PackageItem[]> => {
   return GET<PackageItem[]>(API_ENDPOINTS.CONCEPT.PACKAGES(conceptId));
 };
-
-export interface ScheduleSlot {
-  startTime: string;
-  endTime: string;
-  isAvailable: boolean;
-}
 
 export const getPhotographerSchedules = (
   photographerId: number,
@@ -31,29 +17,17 @@ export const getPhotographerSchedules = (
   );
 };
 
-export interface CreateBookingDto {
-  conceptId: number;
-  packageId: number;
-  bookingDate: string;
-  address: string;
-  note?: string;
-}
-
-export const createBooking = (data: CreateBookingDto): Promise<Booking> => {
-  return POST<Booking>(API_ENDPOINTS.BOOKINGS.CREATE, data);
-};
-
 export const getBookingDetail = (bookingId: number): Promise<Booking> => {
   return GET<Booking>(API_ENDPOINTS.BOOKINGS.DETAIL(bookingId));
 };
 
-export const respondBooking = (
-  bookingId: number,
-  status: 'CONFIRMED' | 'REJECTED',
-): Promise<Booking> => {
-  return PATCH<Booking>(API_ENDPOINTS.BOOKINGS.RESPOND(bookingId), { status });
+export const createBooking = (data: CreateBooking): Promise<Booking> => {
+  return POST<Booking>(API_ENDPOINTS.BOOKINGS.CREATE, data);
 };
 
-export const completeBooking = (bookingId: number): Promise<Booking> => {
-  return PATCH<Booking>(API_ENDPOINTS.BOOKINGS.COMPLETE(bookingId), {});
+export const respondBooking = (
+  bookingId: number,
+  status: typeof BOOKING_STATUS.CONFIRMED | typeof BOOKING_STATUS.REJECTED,
+): Promise<Booking> => {
+  return PATCH<Booking>(API_ENDPOINTS.BOOKINGS.RESPOND(bookingId), { status });
 };

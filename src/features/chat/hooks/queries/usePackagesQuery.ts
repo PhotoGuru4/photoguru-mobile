@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getConceptPackages } from '../../services/bookingService';
+import { getConceptPackages } from '@features/chat/services/bookingService';
 
 export const usePackagesQuery = (conceptId: number) => {
   return useQuery({

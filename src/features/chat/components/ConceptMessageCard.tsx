@@ -34,10 +34,18 @@ const ConceptMessageCard = ({ concept, roomId }: Props) => {
         conceptId: concept.id,
         photographerId: concept.photographerId,
         conceptName: concept.name,
+        conceptThumbnail: concept.thumbnailUrl,
         roomId,
       },
     });
-  }, [navigation, concept.id, concept.photographerId, concept.name, roomId]);
+  }, [
+    navigation,
+    concept.id,
+    concept.photographerId,
+    concept.name,
+    concept.thumbnailUrl,
+    roomId,
+  ]);
 
   const imageUri = imageError
     ? DEFAULT_IMAGES.DEFAULT_SLIDER_IMAGE

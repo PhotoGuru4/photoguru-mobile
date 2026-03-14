@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getPhotographerSchedules } from '../../services/bookingService';
+import { getPhotographerSchedules } from '@features/chat/services/bookingService';
 
 export const usePhotographerSchedulesQuery = (
   photographerId: number,

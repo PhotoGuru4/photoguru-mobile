@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { respondBooking } from '../../services/bookingService';
+import { respondBooking } from '@features/chat/services/bookingService';
+import { BOOKING_STATUS } from '@shared/constants/booking';
 
 export const useRespondBookingMutation = () => {
   const queryClient = useQueryClient();
@@ -10,10 +11,16 @@ export const useRespondBookingMutation = () => {
       status,
     }: {
       bookingId: number;
-      status: 'CONFIRMED' | 'REJECTED';
+      status:
+        | typeof BOOKING_STATUS.CONFIRMED
+        | typeof BOOKING_STATUS.REJECTED;
     }) => respondBooking(bookingId, status),
+
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['booking', data.id] });
+      queryClient.setQueryData(['booking', data.id], data);
+      queryClient.invalidateQueries({
+        queryKey: ['booking', data.id],
+      });
     },
   });
 };

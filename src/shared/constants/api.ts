@@ -34,6 +34,5 @@ export const API_ENDPOINTS = {
     CREATE: '/bookings',
     DETAIL: (id: number) => `/bookings/${id}`,
     RESPOND: (id: number) => `/bookings/${id}/respond`,
-    COMPLETE: (id: number) => `/bookings/${id}/complete`,
   },
 };

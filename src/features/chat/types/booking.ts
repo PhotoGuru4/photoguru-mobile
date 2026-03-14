@@ -1,4 +1,4 @@
-export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'REJECTED' | 'COMPLETED';
+import { BookingStatus } from '@shared/constants/booking';
 
 export interface PackageLocation {
   id: number;
@@ -7,13 +7,27 @@ export interface PackageLocation {
   addressDetail: string | null;
 }
 
+export interface ScheduleSlot {
+  startTime: string;
+  endTime: string;
+  isAvailable: boolean;
+}
+
+export interface CreateBooking {
+  conceptId: number;
+  packageId: number;
+  bookingDate: string;
+  address: string;
+  note?: string;
+}
+
 export interface PackageItem {
   id: number;
   tier: string;
   price: number;
   description: string | null;
   estimatedDuration: number | null;
-  locations: PackageLocation[]; // Thêm locations vào đây
+  locations: PackageLocation[];
 }
 
 export interface Booking {
@@ -22,7 +36,7 @@ export interface Booking {
   photographerId: number;
   conceptId: number;
   packageId: number;
-  address: string; // Lưu địa điểm đã chọn
+  address: string;
   bookingDate: string;
   status: BookingStatus;
   totalPrice: number;

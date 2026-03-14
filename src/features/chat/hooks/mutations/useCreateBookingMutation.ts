@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { createBooking } from '../../services/bookingService';
+import { createBooking } from '@features/chat/services/bookingService';
 
 export const useCreateBookingMutation = () => {
   return useMutation({

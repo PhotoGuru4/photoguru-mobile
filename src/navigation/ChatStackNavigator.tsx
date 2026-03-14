@@ -1,27 +1,39 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
+import {
+  useNavigation,
+  NavigationProp,
+  ParamListBase,
+} from '@react-navigation/native';
 
 import Messages from '@screens/Messages';
 import ChatDetail from '@screens/ChatDetail';
-import SelectPackageScreen from '@screens/chat/SelectPackageScreen';
-import SelectDateTimeScreen from '@screens/chat/SelectDateTimeScreen';
+import SelectPackageScreen from '@screens/SelectPackageScreen';
+import SelectDateTimeScreen from '@screens/SelectDateTimeScreen';
+import ConfirmBookingScreen from '@screens/ConfirmBookingScreen';
+
 import { BackButton } from '@shared/components/common/BackButton';
 import { useAuthStore } from '@store/authStore';
 import { SCREENS } from '@shared/constants';
+
 import { LogOut } from 'lucide-react-native';
-import ConfirmBookingScreen from '@/screens/chat/ConfirmBookingScreen';
 
 export type ChatStackParamList = {
   Messages: undefined;
-  ChatDetail: { conversationId: string };
+
+  ChatDetail: {
+    conversationId: string;
+  };
+
   SelectPackage: {
     conceptId: number;
     photographerId: number;
     conceptName: string;
+    conceptThumbnail: string | null;
     roomId: string;
   };
+
   SelectDateTime: {
     conceptId: number;
     photographerId: number;
@@ -30,23 +42,33 @@ export type ChatStackParamList = {
     packagePrice: number;
     packageDescription: string;
     estimatedDuration: number | null;
+
     conceptName: string;
+    conceptThumbnail: string | null;
+
     roomId: string;
     address: string;
   };
+
   ConfirmBooking: {
     conceptId: number;
     photographerId: number;
     packageId: number;
+
     packageTier: string;
     packagePrice: number;
     packageDescription: string;
     estimatedDuration: number | null;
+
     conceptName: string;
+    conceptThumbnail: string | null;
+
     roomId: string;
     address: string;
+
     bookingDate: string;
-    bookingTime: string;
+    bookingStart: string;
+    bookingEnd: string;
   };
 };
 
@@ -58,6 +80,7 @@ const ChatStackNavigator = () => {
 
   const handleLogout = async () => {
     await logout();
+
     navigation.reset({
       index: 0,
       routes: [{ name: SCREENS.AUTH.LOGIN }],
@@ -91,6 +114,7 @@ const ChatStackNavigator = () => {
           headerLeft: () => <BackButton size={30} fallback="HomeTab" />,
         }}
       />
+
       <Stack.Screen
         name="ChatDetail"
         component={ChatDetail}
@@ -99,16 +123,19 @@ const ChatStackNavigator = () => {
           headerLeft: () => <BackButton size={30} />,
         }}
       />
+
       <Stack.Screen
         name="SelectPackage"
         component={SelectPackageScreen}
         options={{ title: 'Select Package' }}
       />
+
       <Stack.Screen
         name="SelectDateTime"
         component={SelectDateTimeScreen}
         options={{ title: 'Select Date & Time' }}
       />
+
       <Stack.Screen
         name="ConfirmBooking"
         component={ConfirmBookingScreen}

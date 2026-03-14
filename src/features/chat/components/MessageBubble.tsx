@@ -6,7 +6,7 @@ import type { ConceptChatCard } from '@features/chat/types/conceptCard';
 import ConceptMessageCard from '@features/chat/components/ConceptMessageCard';
 import BookingMessageCard from '@features/chat/components/BookingMessageCard';
 import { MESSAGE_TYPES } from '@shared/constants/messageType';
-import { BookingStatus } from '../types/booking';
+import { BookingStatus } from '@shared/constants/booking';
 
 interface Props {
   message: Message;
