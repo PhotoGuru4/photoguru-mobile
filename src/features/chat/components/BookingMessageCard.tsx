@@ -141,15 +141,18 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
             <Text color="pink">
               <Text className="font-semibold">Time:</Text>{' '}
               <Text variant="caption">
-                {formatTime(booking.bookingDate)} -{' '}
-                {booking.package?.estimatedDuration
-                  ? formatTime(
-                    new Date(
-                      new Date(booking.bookingDate).getTime() +
-                          booking.package.estimatedDuration * 60000,
-                    ).toISOString(),
-                  )
-                  : ''}
+                {(() => {
+                  const start = new Date(booking.bookingDate);
+
+                  const end = new Date(
+                    start.getTime() +
+                      (booking.package?.estimatedDuration || 0) * 60000,
+                  );
+
+                  return `${formatTime(start.toISOString())} - ${formatTime(
+                    end.toISOString(),
+                  )}`;
+                })()}
               </Text>
             </Text>
           </View>

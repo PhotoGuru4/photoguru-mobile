@@ -118,9 +118,11 @@ export const useSelectDateTime = (params: Params) => {
   const minDate = useMemo(() => new Date().toISOString().split('T')[0], []);
 
   const formatSlotTime = (iso: string) =>
-    new Date(iso).toLocaleTimeString('vi-VN', {
-      hour: '2-digit',
+    new Date(iso).toLocaleTimeString('en-US', {
+      hour: 'numeric',
       minute: '2-digit',
+      hour12: false,
+      timeZone: 'Asia/Ho_Chi_Minh',
     });
 
   return {

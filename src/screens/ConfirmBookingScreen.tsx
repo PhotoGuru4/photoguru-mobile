@@ -63,7 +63,8 @@ const ConfirmBookingScreen = () => {
   const handleConfirm = async () => {
     if (!user) return;
 
-    const fullBookingDate = `${bookingDate}T${bookingStart}:00.000Z`;
+    const localDate = new Date(`${bookingDate}T${bookingStart}:00`);
+    const fullBookingDate = localDate.toISOString();
 
     try {
       const booking = await createBookingMutation.mutateAsync({
