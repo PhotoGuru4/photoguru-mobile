@@ -46,6 +46,14 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
           message: 'Waiting for Photographer Response',
         };
 
+      case BOOKING_STATUS.INPROGRESS:
+        return {
+          badge: 'bg-pink-100',
+          badgeText: 'text-pink-600',
+          footer: 'bg-pink-100 border-pink-200',
+          message: 'Your photoshoot is in progress',
+        };
+
       case BOOKING_STATUS.CONFIRMED:
         return {
           badge: 'bg-blue-100',
@@ -221,7 +229,7 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
 
       </View>
 
-      {statusStyle.message !== '' && (
+      {statusStyle.message && (
         <View className={`${statusStyle.footer} px-4 py-5 items-center border-t`}>
           <Text variant="body" className="text-center">
             {statusStyle.message}
