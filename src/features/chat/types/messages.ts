@@ -1,6 +1,6 @@
 import { MESSAGE_TYPES } from '@shared/constants/messageType';
 import { Timestamp } from 'firebase/firestore';
-import { BookingStatus } from './booking';
+import { BookingStatus } from '@shared/constants/booking';
 
 interface BaseMessage {
   id: string;

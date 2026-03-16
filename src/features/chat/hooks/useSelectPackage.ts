@@ -66,7 +66,7 @@ export const useSelectPackage = (params: Params) => {
       packageId: selectedPackage.id,
       packageTier: selectedPackage.tier,
       packagePrice: selectedPackage.price,
-      packageDescription: selectedPackage.description || '',
+      packageBenefits: selectedPackage.benefit || [],
       estimatedDuration: selectedPackage.estimatedDuration,
 
       conceptName,

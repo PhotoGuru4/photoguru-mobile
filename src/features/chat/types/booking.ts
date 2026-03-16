@@ -25,7 +25,7 @@ export interface PackageItem {
   id: number;
   tier: string;
   price: number;
-  description: string | null;
+  benefit: string[];
   estimatedDuration: number | null;
   locations: PackageLocation[];
 }
@@ -42,7 +42,16 @@ export interface Booking {
   totalPrice: number;
   note?: string;
   isCompletedByCustomer: boolean;
-  concept?: { name: string; thumbnailUrl: string | null };
-  package?: { tier: string; description: string | null; estimatedDuration: number | null };
-  client?: { fullName: string };
+  concept?: {
+    name: string;
+    thumbnailUrl: string | null
+  };
+  package?: {
+    tier: string;
+    benefit: string[];
+    estimatedDuration: number | null;
+  };
+  client?: {
+    fullName: string
+  };
 }

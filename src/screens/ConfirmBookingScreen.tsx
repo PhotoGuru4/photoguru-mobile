@@ -45,7 +45,7 @@ const ConfirmBookingScreen = () => {
 
     packageTier,
     packagePrice,
-    packageDescription,
+    packageBenefits,
     estimatedDuration,
 
     bookingDate,
@@ -177,24 +177,21 @@ const ConfirmBookingScreen = () => {
           </Text>
 
           <View className="gap-2">
-
+            {packageBenefits?.map((benefit: string, index: number) => (
+              <View key={index} className="flex-row items-center gap-2">
+                <Check size={16} color="#E06B80" />
+                <Text lineClamp={1} variant="small">{benefit}</Text>
+              </View>
+            ))}
+          </View>
+          {estimatedDuration && (
             <View className="flex-row items-center gap-2">
-              <Check size={16} color="#E06B80" />
-              <Text variant="small">
-                {packageDescription || 'No description'}
+              <Check size={14} color="#E06B80" />
+              <Text lineClamp={1} variant="small">
+                {estimatedDuration} minutes photo session
               </Text>
             </View>
-
-            {estimatedDuration && (
-              <View className="flex-row items-center gap-2">
-                <Check size={16} color="#E06B80" />
-                <Text variant="small">
-                  {estimatedDuration} minutes photo session
-                </Text>
-              </View>
-            )}
-
-          </View>
+          )}
         </View>
 
         <View className="mt-8 flex-row gap-3">

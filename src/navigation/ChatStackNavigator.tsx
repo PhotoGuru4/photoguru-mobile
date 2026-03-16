@@ -40,7 +40,7 @@ export type ChatStackParamList = {
     packageId: number;
     packageTier: string;
     packagePrice: number;
-    packageDescription: string;
+    packageBenefits: string[];
     estimatedDuration: number | null;
 
     conceptName: string;
@@ -57,7 +57,7 @@ export type ChatStackParamList = {
 
     packageTier: string;
     packagePrice: number;
-    packageDescription: string;
+    packageBenefits: string[];
     estimatedDuration: number | null;
 
     conceptName: string;

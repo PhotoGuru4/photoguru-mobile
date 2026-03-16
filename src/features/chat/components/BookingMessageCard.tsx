@@ -91,7 +91,7 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
         </Text>
 
         <View className={`${statusStyle.badge} px-3 py-1 rounded-full`}>
-          <Text variant="caption" className={`${statusStyle.badgeText} font-semibold`}>
+          <Text lineClamp={1} variant="caption" className={`${statusStyle.badgeText} font-semibold`}>
             {status
               ? status.charAt(0).toUpperCase() +
                 status.slice(1).toLowerCase()
@@ -202,17 +202,16 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
           </Text>
 
           <View className="gap-2">
-            <View className="flex-row items-center gap-2">
-              <Check size={14} color="#E06B80" />
-              <Text variant="caption">
-                {booking.package?.description || 'Photo session'}
-              </Text>
-            </View>
-
+            {booking.package?.benefit?.map((benefit, index) => (
+              <View key={index} className="flex-row items-center gap-2">
+                <Check size={14} color="#E06B80" />
+                <Text lineClamp={1} variant="caption">{benefit}</Text>
+              </View>
+            ))}
             {booking.package?.estimatedDuration && (
               <View className="flex-row items-center gap-2">
                 <Check size={14} color="#E06B80" />
-                <Text variant="caption">
+                <Text lineClamp={1} variant="caption">
                   {booking.package.estimatedDuration} minutes photo session
                 </Text>
               </View>

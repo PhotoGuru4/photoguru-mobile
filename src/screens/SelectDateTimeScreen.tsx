@@ -28,7 +28,7 @@ const SelectDateTimeScreen = () => {
     conceptThumbnail,
     packageTier,
     packagePrice,
-    packageDescription,
+    packageBenefits,
     estimatedDuration,
   } = route.params;
 
@@ -53,7 +53,7 @@ const SelectDateTimeScreen = () => {
     conceptThumbnail,
     packageTier,
     packagePrice,
-    packageDescription,
+    packageBenefits,
     estimatedDuration,
   });
 

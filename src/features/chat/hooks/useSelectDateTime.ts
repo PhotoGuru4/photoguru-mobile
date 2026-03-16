@@ -26,7 +26,7 @@ interface Params {
 
   packageTier: string;
   packagePrice: number;
-  packageDescription: string;
+  packageBenefits: string[];
   estimatedDuration: number | null;
 }
 
@@ -48,7 +48,7 @@ export const useSelectDateTime = (params: Params) => {
     conceptThumbnail,
     packageTier,
     packagePrice,
-    packageDescription,
+    packageBenefits,
     estimatedDuration,
   } = params;
 
@@ -106,7 +106,7 @@ export const useSelectDateTime = (params: Params) => {
 
       packageTier,
       packagePrice,
-      packageDescription,
+      packageBenefits,
       estimatedDuration,
 
       bookingDate: selectedDate,

@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, Button, Loading } from '@shared/components/common';
 import { formatPrice } from '@shared/utils/formatPrice';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import { MapPin } from 'lucide-react-native';
+import { MapPin, Check } from 'lucide-react-native';
 
 import { ChatStackParamList } from '@navigation/ChatStackNavigator';
 import { useSelectPackage } from '@features/chat/hooks/useSelectPackage';
@@ -79,9 +79,21 @@ const SelectPackageScreen = () => {
                 </Text>
               </View>
 
-              <Text variant="small" color="muted" className="mb-3">
-                {item.description}
-              </Text>
+              <View className="mb-3">
+                {item.benefit?.map((b, index) => (
+                  <Text lineClamp={1} key={index} variant="small" color="muted">
+                    <Check size={14} color="#E06B80" /> {b}
+                  </Text>
+                ))}
+                {item.estimatedDuration && (
+                  <View className="flex-row items-center gap-1">
+                    <Check size={14} color="#E06B80" />
+                    <Text lineClamp={1} variant="small" color="muted">
+                      {item.estimatedDuration} minutes photo session
+                    </Text>
+                  </View>
+                )}
+              </View>
 
               <View className="border-t border-gray-100 pt-3">
                 <View className="flex-row items-center mb-2">
