@@ -17,10 +17,7 @@ import { MESSAGE_TYPES } from '@shared/constants/messageType';
 import { LoadMoreDots } from '@shared/components/common/LoadMoreDots';
 import type { ChatStackParamList } from '@navigation/ChatStackNavigator';
 
-type ChatDetailRouteProp = RouteProp<
-  ChatStackParamList,
-  'ChatDetail'
->;
+type ChatDetailRouteProp = RouteProp<ChatStackParamList, 'ChatDetail'>;
 
 const ITEM_HEIGHT = 70;
 
@@ -98,6 +95,7 @@ const ChatDetail = () => {
                 ? conceptMap[item.conceptId]
                 : undefined
             }
+            roomId={conversationId}
           />
         )}
 

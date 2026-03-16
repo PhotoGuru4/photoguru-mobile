@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES } from '@shared/constants/messageType';
 import { Timestamp } from 'firebase/firestore';
+import { BookingStatus } from '@shared/constants/booking';
 
 interface BaseMessage {
   id: string;
@@ -18,4 +19,10 @@ export interface ConceptMessage extends BaseMessage {
   conceptId: number;
 }
 
-export type Message = TextMessage | ConceptMessage;
+export interface BookingMessage extends BaseMessage {
+  type: typeof MESSAGE_TYPES.BOOKING;
+  bookingId: number;
+  status: BookingStatus;
+}
+
+export type Message = TextMessage | ConceptMessage | BookingMessage;
