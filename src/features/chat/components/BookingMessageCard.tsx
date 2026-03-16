@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 import { Text } from '@shared/components/common';
-import { useBookingDetailQuery } from '@features/chat/hooks/queries/useBookingDetailQuery';
+
 import { formatPrice } from '@shared/utils/formatPrice';
 import { formatTime } from '@shared/utils/formatTime';
 import { formatDate } from '@shared/utils/formatDate';
-import { getSafeImage } from '@shared/utils/safeImage';
-import { DEFAULT_IMAGES } from '@shared/constants';
+
 import {
   Calendar,
   Clock,
@@ -15,7 +14,8 @@ import {
   MapPin,
   Check,
 } from 'lucide-react-native';
-import { BOOKING_STATUS } from '@shared/constants/booking';
+
+import { useBookingMessageCard } from '@features/chat/hooks/useBookingMessageCard';
 
 interface Props {
   bookingId: number;
@@ -25,70 +25,13 @@ interface Props {
 }
 
 const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
-  const { data: booking } = useBookingDetailQuery(bookingId);
-
-  const status = booking?.status || initialStatus;
+  const { booking, status, imageUri, statusStyle } =
+    useBookingMessageCard({
+      bookingId,
+      initialStatus,
+    });
 
   if (!booking) return null;
-
-  const imageUri = getSafeImage(
-    booking.concept?.thumbnailUrl,
-    DEFAULT_IMAGES.DEFAULT_SLIDER_IMAGE,
-  );
-
-  const getStatusStyle = () => {
-    switch (status) {
-      case BOOKING_STATUS.PENDING:
-        return {
-          badge: 'bg-amber-100',
-          badgeText: 'text-amber-700',
-          footer: 'bg-amber-100 border-amber-200',
-          message: 'Waiting for Photographer Response',
-        };
-
-      case BOOKING_STATUS.INPROGRESS:
-        return {
-          badge: 'bg-pink-100',
-          badgeText: 'text-pink-600',
-          footer: 'bg-pink-100 border-pink-200',
-          message: 'Your photoshoot is in progress',
-        };
-
-      case BOOKING_STATUS.CONFIRMED:
-        return {
-          badge: 'bg-blue-100',
-          badgeText: 'text-blue-700',
-          footer: 'bg-blue-100 border-blue-200',
-          message: 'Photographer has confirmed this booking',
-        };
-
-      case BOOKING_STATUS.REJECTED:
-        return {
-          badge: 'bg-red-100',
-          badgeText: 'text-red-700',
-          footer: 'bg-red-100 border-red-200',
-          message: 'This booking has been declined',
-        };
-
-      case BOOKING_STATUS.COMPLETED:
-        return {
-          badge: 'bg-green-100',
-          badgeText: 'text-green-700',
-          footer: 'bg-green-100 border-green-200',
-          message: 'This booking has been completed',
-        };
-
-      default:
-        return {
-          badge: 'bg-gray-100',
-          badgeText: 'text-gray-700',
-          footer: 'bg-gray-100 border-gray-200',
-          message: '',
-        };
-    }
-  };
-
-  const statusStyle = getStatusStyle();
 
   return (
     <View className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
@@ -99,7 +42,11 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
         </Text>
 
         <View className={`${statusStyle.badge} px-3 py-1 rounded-full`}>
-          <Text lineClamp={1} variant="caption" className={`${statusStyle.badgeText} font-semibold`}>
+          <Text
+            lineClamp={1}
+            variant="caption"
+            className={`${statusStyle.badgeText} font-semibold`}
+          >
             {status
               ? status.charAt(0).toUpperCase() +
                 status.slice(1).toLowerCase()
@@ -118,7 +65,12 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
           />
 
           <View className="flex-1 justify-center">
-            <Text lineClamp={1} variant="body" color="pink" className="font-semibold">
+            <Text
+              lineClamp={1}
+              variant="body"
+              color="pink"
+              className="font-semibold"
+            >
               {booking.concept?.name}
             </Text>
 
@@ -151,7 +103,6 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
               <Text variant="caption">
                 {(() => {
                   const start = new Date(booking.bookingDate);
-
                   const end = new Date(
                     start.getTime() +
                       (booking.package?.estimatedDuration || 0) * 60000,
@@ -213,9 +164,12 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
             {booking.package?.benefit?.map((benefit, index) => (
               <View key={index} className="flex-row items-center gap-2">
                 <Check size={14} color="#E06B80" />
-                <Text lineClamp={1} variant="caption">{benefit}</Text>
+                <Text lineClamp={1} variant="caption">
+                  {benefit}
+                </Text>
               </View>
             ))}
+
             {booking.package?.estimatedDuration && (
               <View className="flex-row items-center gap-2">
                 <Check size={14} color="#E06B80" />
@@ -230,13 +184,14 @@ const BookingMessageCard = ({ bookingId, initialStatus }: Props) => {
       </View>
 
       {statusStyle.message && (
-        <View className={`${statusStyle.footer} px-4 py-5 items-center border-t`}>
+        <View
+          className={`${statusStyle.footer} px-4 py-5 items-center border-t`}
+        >
           <Text variant="body" className="text-center">
             {statusStyle.message}
           </Text>
         </View>
       )}
-
     </View>
   );
 };
