@@ -3,6 +3,7 @@ export const BOOKING_STATUS = {
   REJECTED: 'REJECTED',
   COMPLETED: 'COMPLETED',
   PENDING: 'PENDING',
+  INPROGRESS: 'INPROGRESS',
 } as const;
 
 export type BookingStatus =
