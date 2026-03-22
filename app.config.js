@@ -4,6 +4,7 @@ export default {
     slug: "photoguru-mobile",
     version: "1.0.0",
     owner: "holykimsa",
+    userInterfaceStyle: "automatic",
 
     android: {
       package: "com.holykimsa.photoguru"
