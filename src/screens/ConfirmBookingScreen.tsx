@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CommonActions } from '@react-navigation/native';
 import { Text, Button } from '@shared/components/common';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -76,7 +77,18 @@ const ConfirmBookingScreen = () => {
 
       await sendBookingMessage(roomId, user.id, booking.id, 'PENDING');
 
-      navigation.navigate('ChatDetail', { conversationId: roomId });
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'Messages' },
+            {
+              name: 'ChatDetail',
+              params: { conversationId: roomId },
+            },
+          ],
+        }),
+      );
     } catch (error) {
       console.error('Booking error:', error);
     }
