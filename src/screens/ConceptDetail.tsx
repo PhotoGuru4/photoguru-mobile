@@ -32,10 +32,10 @@ const ConceptDetail = () => {
     return <Loading />;
   }
 
-  const imageUrls =
-    concept.photos?.map((p) => p.imageUrl) ?? [
-      concept.thumbnailUrl,
-    ];
+  const imageUrls = [
+    concept.thumbnailUrl,
+    ...(concept.photos?.map((p) => p.imageUrl).filter(Boolean) ?? []),
+  ].filter(Boolean);
 
   return (
     <ScrollView
